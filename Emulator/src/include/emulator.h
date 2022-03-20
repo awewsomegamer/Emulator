@@ -11,8 +11,6 @@
 
 uint16_t memory[UINT16_MAX];
 
-#define TEST 5
-
 typedef enum{
 	A = 1,
 	B,
