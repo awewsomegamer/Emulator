@@ -15,10 +15,26 @@ void print_regs(){
 	printf("+-I4 : %d\n", registers[10]);
 }
 
+void MOV_OPERATOR(uint8_t indices, uint16_t v1, uint16_t v2){
+	if (indices == 0){
+		// value 1 == register
+		registers[v1 / 16 - 1] = v2;
+	}
+
+	if (indices == 1) {
+		// value 2 == register
+		// value 2 == memory address
+		memory[v1] = registers[v2 / 16 - 1];
+	}
+
+	if (indices == 2){
+		// both values are registers
+		registers[v1 / 16 - 1] = registers[v2 / 16 - 1];
+	}
+}
+
 int main(int argc, char* argv[]){
 	FILE* in_file;
-	FILE* out_file_test;
-	out_file_test = fopen("outtest.out", "w");
 
 	for (int i = 1; i < argc; i++)
 		if (startsWith(argv[i], "-i"))
@@ -35,27 +51,29 @@ int main(int argc, char* argv[]){
 	for (int i = 0; i < file_length; i++)
 		fread((bytes+i), 1, 1, in_file);
 
+	operation_fuctions[1] = MOV_OPERATOR;
+
 	for (int i = 0; i < file_length; i+=12){
 		uint8_t operation =  *(bytes + i);
 		uint8_t indices =  *(bytes + i+1);
 		uint32_t v1 = *(bytes + i+7) << 16 | *(bytes + i+6) << 12 | *(bytes + i+5) << 8 | *(bytes + i+4);
 		uint32_t v2 = *(bytes + i+11) << 16 | *(bytes + i+10) << 12 | *(bytes + i+9) << 8 | *(bytes + i+8);
 
-		if (operation == 1){
-			if (indices == 0){
-				// value 1 == register
-				registers[v1 / 16 - 1] = v2;
-			}
+		(*operation_fuctions[operation])(indices, v1, v2);
 
-			if (indices == 1) {
-				// value 2 == register
-			}
+		// uint16_t register_value = indices < 3 ? *(bytes + i+5 + (indices * 4)) << 8 | *(bytes + i+4 + (indices * 4)) 
+								// : *(bytes + i+5) << 8 | *(bytes + i+4);
 
-			if (indices == 2){
-				// both values are registers
-				registers[v1 / 16 - 1] = registers[v2 / 16 - 1];
-			}
-		}
+		// uint16_t value = indices < 3 ? *(bytes + i+5 + ((~indices & 1) * 4)) << 8 | *(bytes + i+4 + ((~indices & 1) * 4)) 
+									// : *(bytes + i+5) << 8 | *(bytes + i+4);
+
+		// printf("%04X %04X\n", GET_VALUE(0, v1, indices), GET_VALUE(1, v2, indices));
+
+		// if (operation == 1){
+		// 	registers[register_value] = value;
+		// }
+		
+		// }
 
 		print_regs();
 	}
