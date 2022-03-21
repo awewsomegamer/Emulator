@@ -53,6 +53,6 @@ typedef enum{
 	RET,
 	OPERATION_MAX
 } OPERATIONS_T;
-void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint16_t, uint16_t);
+void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint32_t, uint32_t);
 
 #endif 

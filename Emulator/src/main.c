@@ -45,20 +45,6 @@ int main(int argc, char* argv[]){
 		if (operation != 0)
 			(*operation_fuctions[operation])(indices, v1, v2);
 
-		// uint16_t register_value = indices < 3 ? *(bytes + i+5 + (indices * 4)) << 8 | *(bytes + i+4 + (indices * 4)) 
-								// : *(bytes + i+5) << 8 | *(bytes + i+4);
-
-		// uint16_t value = indices < 3 ? *(bytes + i+5 + ((~indices & 1) * 4)) << 8 | *(bytes + i+4 + ((~indices & 1) * 4)) 
-									// : *(bytes + i+5) << 8 | *(bytes + i+4);
-
-		// printf("%04X %04X\n", GET_VALUE(0, v1, indices), GET_VALUE(1, v2, indices));
-
-		// if (operation == 1){
-		// 	registers[register_value] = value;
-		// }
-		
-		// }
-
 		print_regs();
 	}
 
