@@ -1,4 +1,5 @@
 #include <emulator.h>
+#include <functions.h>
 
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
@@ -13,24 +14,6 @@ void print_regs(){
 	printf("+-I2 : %d\n", registers[8]);
 	printf("+-I3 : %d\n", registers[9]);
 	printf("+-I4 : %d\n", registers[10]);
-}
-
-void MOV_OPERATOR(uint8_t indices, uint16_t v1, uint16_t v2){
-	if (indices == 0){
-		// value 1 == register
-		registers[v1 / 16 - 1] = v2;
-	}
-
-	if (indices == 1) {
-		// value 2 == register
-		// value 2 == memory address
-		memory[v1] = registers[v2 / 16 - 1];
-	}
-
-	if (indices == 2){
-		// both values are registers
-		registers[v1 / 16 - 1] = registers[v2 / 16 - 1];
-	}
 }
 
 int main(int argc, char* argv[]){
@@ -51,7 +34,7 @@ int main(int argc, char* argv[]){
 	for (int i = 0; i < file_length; i++)
 		fread((bytes+i), 1, 1, in_file);
 
-	operation_fuctions[1] = MOV_OPERATOR;
+	init_operator_functions();
 
 	for (int i = 0; i < file_length; i+=12){
 		uint8_t operation =  *(bytes + i);
@@ -59,7 +42,8 @@ int main(int argc, char* argv[]){
 		uint32_t v1 = *(bytes + i+7) << 16 | *(bytes + i+6) << 12 | *(bytes + i+5) << 8 | *(bytes + i+4);
 		uint32_t v2 = *(bytes + i+11) << 16 | *(bytes + i+10) << 12 | *(bytes + i+9) << 8 | *(bytes + i+8);
 
-		(*operation_fuctions[operation])(indices, v1, v2);
+		if (operation != 0)
+			(*operation_fuctions[operation])(indices, v1, v2);
 
 		// uint16_t register_value = indices < 3 ? *(bytes + i+5 + (indices * 4)) << 8 | *(bytes + i+4 + (indices * 4)) 
 								// : *(bytes + i+5) << 8 | *(bytes + i+4);
