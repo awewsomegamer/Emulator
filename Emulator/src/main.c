@@ -1,5 +1,7 @@
 #include <emulator.h>
 #include <functions.h>
+#include <stdbool.h>
+#include <assert.h>
 
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
@@ -18,10 +20,20 @@ void print_regs(){
 
 int main(int argc, char* argv[]){
 	FILE* in_file;
+	bool in_file_set = false;
+	int start_address = 0;
 
-	for (int i = 1; i < argc; i++)
-		if (startsWith(argv[i], "-i"))
-        in_file = fopen(argv[i+1], "r");
+	for (int i = 1; i < argc; i++){
+		if (startsWith(argv[i], "-i")){
+        	in_file = fopen(argv[i+1], "r");
+			in_file_set = true;
+		}
+
+		if (startsWith(argv[i], "-org"))
+			start_address = atoi(argv[i+1]);
+	}
+
+	assert(in_file != NULL);
 
 	long file_length = 0;
 	fseek(in_file, 0, SEEK_END);
@@ -34,6 +46,8 @@ int main(int argc, char* argv[]){
 	for (int i = 0; i < file_length; i++)
 		fread((bytes+i), 1, 1, in_file);
 
+	memcpy(memory + start_address, bytes, sizeof(bytes));
+
 	init_operator_functions();
 
 	for (int i = 0; i < file_length; i+=12){
@@ -44,7 +58,7 @@ int main(int argc, char* argv[]){
 
 		if (operation != 0)
 			(*operation_fuctions[operation])(indices, v1, v2);
-
+			
 		print_regs();
 	}
 
