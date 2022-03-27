@@ -12,7 +12,7 @@
 uint16_t memory[UINT16_MAX];
 
 typedef enum{
-	A = 1,
+	A = 0,
 	B,
 	C,
 	D,

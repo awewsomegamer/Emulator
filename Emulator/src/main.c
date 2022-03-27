@@ -41,28 +41,28 @@ int main(int argc, char* argv[]){
 
 	rewind(in_file);
 
-	uint8_t* bytes = (uint8_t*)malloc(sizeof(uint8_t)*(file_length+1));
-
 	for (int i = 0; i < file_length; i++)
-		fread((bytes+i), 1, 1, in_file);
-
-	memcpy(memory + start_address, bytes, sizeof(bytes));
+		fread((memory+i+start_address), 1, 1, in_file);
 
 	init_operator_functions();
 
-	for (int i = 0; i < file_length; i+=12){
-		uint8_t operation =  *(bytes + i);
-		uint8_t indices =  *(bytes + i+1);
-		uint32_t v1 = *(bytes + i+7) << 16 | *(bytes + i+6) << 12 | *(bytes + i+5) << 8 | *(bytes + i+4);
-		uint32_t v2 = *(bytes + i+11) << 16 | *(bytes + i+10) << 12 | *(bytes + i+9) << 8 | *(bytes + i+8);
+	while (true){
+		uint8_t operation =  *(memory + registers[IP]);
+		uint8_t indices =  *(memory + registers[IP]+1);
+		uint32_t v1 = *(memory + registers[IP]+7) << 16 | *(memory + registers[IP]+6) << 12 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
+		uint32_t v2 = *(memory + registers[IP]+11) << 16 | *(memory + registers[IP]+10) << 12 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
 
 		if (operation != 0)
 			(*operation_fuctions[operation])(indices, v1, v2);
 			
 		print_regs();
-	}
 
-	free(bytes);
+		registers[IP] += 12;
+
+		// Temporary emulator execution termination
+		if (registers[IP] >= 0x50)
+			break;
+	}
 
 	return 0;
 }

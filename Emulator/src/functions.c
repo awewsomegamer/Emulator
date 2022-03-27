@@ -12,7 +12,7 @@ void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         memory[v1] = v2;
         break;
     case 1:
-		registers[v1 / 16 - 1] = v2;
+	    registers[v1 / 16 - 1] = v2;
         break;
     case 2:
 		memory[v1] = registers[v2 / 16 - 1];
