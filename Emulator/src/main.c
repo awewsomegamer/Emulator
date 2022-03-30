@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
 	FILE* in_file;
 	bool in_file_set = false;
 	int start_address = 0;
+	uint64_t max_memory = UINT16_MAX;
 
 	for (int i = 1; i < argc; i++){
 		if (startsWith(argv[i], "-i")){
@@ -31,15 +32,38 @@ int main(int argc, char* argv[]){
 
 		if (startsWith(argv[i], "-org"))
 			start_address = atoi(argv[i+1]);
+
+		if (startsWith(argv[i], "-mmax"))
+			if (startsWith(argv[i+1], "h"))
+				max_memory = strtol(argv[i+2], NULL, 16);
+			else
+				max_memory = atoi(argv[i+1]);
+
+		if (startsWith(argv[i], "-h")){
+			printf("Visit https://github.com/awewsomegamer/Emulator/blob/main/README.md#cli-usage\n");
+			return 0;
+		}
+
 	}
 
-	assert(in_file != NULL);
+	memory = (uint8_t*)malloc(max_memory * sizeof(uint32_t));
+
+	if (in_file_set == false){
+		printf("No program was specified\n");
+		return 1;
+	}
 
 	long file_length = 0;
 	fseek(in_file, 0, SEEK_END);
 	file_length = ftell(in_file);
 
 	rewind(in_file);
+
+	if (max_memory * sizeof(uint32_t) < file_length){
+		printf("%08X bytes of memory not enough to hold program\n", max_memory);
+		return 1;
+	}
+
 
 	for (int i = 0; i < file_length; i++)
 		fread((memory+i+start_address), 1, 1, in_file);

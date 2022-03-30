@@ -9,7 +9,9 @@
 #include <string.h>
 #include <util.h>
 
-uint16_t memory[UINT16_MAX];
+extern const char* CLI_USAGE;
+
+extern uint8_t* memory;
 
 typedef enum{
 	A = 0,
