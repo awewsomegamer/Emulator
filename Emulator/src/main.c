@@ -47,6 +47,7 @@ int main(int argc, char* argv[]){
 	}
 
 	memory = (uint8_t*)malloc(max_memory * sizeof(uint32_t));
+	stack = (uint8_t*)malloc(8129 * sizeof(uint32_t));
 
 	if (in_file_set == false){
 		printf("No program was specified\n");
@@ -63,7 +64,6 @@ int main(int argc, char* argv[]){
 		printf("%08X bytes of memory not enough to hold program\n", max_memory);
 		return 1;
 	}
-
 
 	for (int i = 0; i < file_length; i++)
 		fread((memory+i+start_address), 1, 1, in_file);
@@ -86,6 +86,9 @@ int main(int argc, char* argv[]){
 		if (registers[IP] >= 0x50)
 			break;
 	}
+
+	free(memory);
+	free(stack);
 
 	return 0;
 }

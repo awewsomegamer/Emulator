@@ -1,5 +1,6 @@
 #include <util.h>
 #include <ctype.h>
+#include <emulator.h>
 
 bool startsWith(const char* str, const char* lookfor){
 	if (strncmp(str, lookfor, strlen(lookfor)) == 0)
@@ -53,4 +54,15 @@ void removeCharacter(char* line, char c){
 		memset(tmp, 0, strlen(tmp));
 		free(tmp);
 	}
+}
+
+void stack_push(uint32_t value){
+	stack[registers[SP]] = value;
+	registers[IP]++;
+}
+
+void stack_pop(uint32_t reg){
+	registers[reg] = stack[registers[IP]];
+	stack[registers[IP]] = 0;
+	registers[IP]--;
 }

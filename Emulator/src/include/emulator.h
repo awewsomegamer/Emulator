@@ -12,6 +12,7 @@
 extern const char* CLI_USAGE;
 
 extern uint8_t* memory;
+extern uint8_t* stack;
 
 typedef enum{
 	A = 0,

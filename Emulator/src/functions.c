@@ -107,15 +107,16 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    
+    *(ivt[v1]);
 }
 
 void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    stack_push(registers[IP]);
+    registers[IP] = v1;
 }
 
 void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    registers[IP] = v1;
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -147,5 +148,7 @@ void JNC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void RET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    registers[IP] = stack[registers[SP]]; // Should always be address to return to, need to figure out better solution later
+    stack[registers[SP]] = 0;
+    registers[SP]--;
 }
