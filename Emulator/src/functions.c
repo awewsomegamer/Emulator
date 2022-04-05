@@ -107,16 +107,17 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    *(ivt[v1]);
+    if (v1 == 0)
+        (*ivt[v1])();
 }
 
 void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     stack_push(registers[IP]);
-    registers[IP] = v1;
+    registers[IP] = v1 - 12;
 }
 
 void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    registers[IP] = v1;
+    registers[IP] = v1 - 12;
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){

@@ -1,5 +1,6 @@
 #include <emulator.h>
 #include <functions.h>
+#include <interrupts.h>
 #include <stdbool.h>
 #include <assert.h>
 
@@ -68,22 +69,26 @@ int main(int argc, char* argv[]){
 	for (int i = 0; i < file_length; i++)
 		fread((memory+i+start_address), 1, 1, in_file);
 
+	init_ivt();
 	init_operator_functions();
+
 
 	while (true){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
 		uint32_t v1 = *(memory + registers[IP]+7) << 16 | *(memory + registers[IP]+6) << 12 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
 		uint32_t v2 = *(memory + registers[IP]+11) << 16 | *(memory + registers[IP]+10) << 12 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
+
+		// printf("%d %d %d %d\n", operation, indices, v1, v2);
 		
 		(*operation_fuctions[operation])(indices, v1, v2);
-		
-		print_regs();
+
+		// print_regs();
 
 		registers[IP] += 12;
 
 		// Temporary emulator execution termination
-		if (registers[IP] >= 0x50)
+		if (registers[IP] >= 0x100)
 			break;
 	}
 
