@@ -24,10 +24,15 @@ void JMP_OPERATOR(uint8_t, uint32_t, uint32_t);
 void CMP_OPERATOR(uint8_t, uint32_t, uint32_t);
 void JE_OPERATOR(uint8_t, uint32_t, uint32_t);
 void JNE_OPERATOR(uint8_t, uint32_t, uint32_t);
-void JZ_OPERATOR(uint8_t, uint32_t, uint32_t);
-void JNZ_OPERATOR(uint8_t, uint32_t, uint32_t);
-void JC_OPERATOR(uint8_t, uint32_t, uint32_t);
-void JNC_OPERATOR(uint8_t, uint32_t, uint32_t);
+void JG_OPERATOR(uint8_t, uint32_t, uint32_t);
+void JGE_OPERATOR(uint8_t, uint32_t, uint32_t);
+void JL_OPERATOR(uint8_t, uint32_t, uint32_t);
+void JLE_OPERATOR(uint8_t, uint32_t, uint32_t);
+
+// void JZ_OPERATOR(uint8_t, uint32_t, uint32_t);
+// void JNZ_OPERATOR(uint8_t, uint32_t, uint32_t);
+// void JC_OPERATOR(uint8_t, uint32_t, uint32_t);
+// void JNC_OPERATOR(uint8_t, uint32_t, uint32_t);
 void RET_OPERATOR(uint8_t, uint32_t, uint32_t);
 
 #endif

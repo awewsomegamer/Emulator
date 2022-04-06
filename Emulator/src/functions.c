@@ -22,10 +22,10 @@ void init_operator_functions(){
     operation_fuctions[15] = CMP_OPERATOR;
     operation_fuctions[16] = JE_OPERATOR;
     operation_fuctions[17] = JNE_OPERATOR;
-    operation_fuctions[18] = JZ_OPERATOR;
-    operation_fuctions[19] = JNZ_OPERATOR;
-    operation_fuctions[20] = JC_OPERATOR;
-    operation_fuctions[21] = JNC_OPERATOR;
+    operation_fuctions[18] = JG_OPERATOR; // JZ
+    operation_fuctions[19] = JGE_OPERATOR; // JNZ
+    operation_fuctions[20] = JL_OPERATOR; // JC
+    operation_fuctions[21] = JLE_OPERATOR; // JNC
 
     // These takes no arguments
     operation_fuctions[0] = NOP_OPERATOR;
@@ -121,32 +121,108 @@ void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    uint32_t value1;
+    uint32_t value2;
 
+    switch (indices){
+    case 0:{
+        value1 = v1;
+        value2 = v2;
+
+        break;
+    }
+
+    case 1:{
+        value1 = registers[v1];
+        value2 = v2;
+        
+        break;
+    }
+
+    case 2:{
+        value1 = v1;
+        value2 = registers[v2];
+        
+        break;
+    }
+
+    case 3:{
+        value1 = registers[v1];
+        value2 = registers[v2];
+        
+        break;
+    }
+
+    // Implement comparison for labels here
+    }
+
+    if (value1 == value2)
+        flags[EQUAL_FLAG] = 1;
+    else
+        flags[EQUAL_FLAG] = 0;
+
+    if (value1 > value2)
+        flags[GREATER_FLAG] = 1;
+    else
+        flags[GREATER_FLAG] = 0;
+
+    if (value1 >= value2)
+        flags[GREATER_EQU_FLAG] = 1;
+    else
+        flags[GREATER_EQU_FLAG] = 0;
+
+    // Implement Zero Flag and Carry Flag
 }
 
 void JE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    if (flags[EQUAL_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
 
 void JNE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    if (!flags[EQUAL_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
 
-void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+void JG_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (flags[GREATER_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
 
-void JNZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+void JGE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (flags[GREATER_EQU_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
 
-void JC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+void JL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (!flags[GREATER_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
 
-void JNC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (!flags[GREATER_EQU_FLAG])
+        JMP_OPERATOR(0, v1, 0);
 }
+
+// void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+//     if (flags[ZERO_FLAG])
+//         JMP_OPERATOR(0, v1, 0);
+// }
+
+// void JNZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+//     if (!flags[ZERO_FLAG])
+//         JMP_OPERATOR(0, v1, 0);
+// }
+
+// void JC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+//     if (flags[CARRY_FLAG])
+//         JMP_OPERATOR(0, v1, 0);
+// }
+
+// void JNC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+//     if (!flags[CARRY_FLAG])
+//         JMP_OPERATOR(0, v1, 0);
+// }
 
 void RET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     registers[IP] = stack[registers[SP]]; // Should always be address to return to, need to figure out better solution later
