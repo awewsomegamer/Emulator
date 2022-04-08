@@ -12,6 +12,7 @@ LOOP:
 	jmp LOOP
 
 END:
+	;nop
 	mov ax, 0xA
 	int 0
 	mov ax, dx
@@ -23,5 +24,6 @@ END:
 	jmp LOOP
 
 E:
+	;nop
 	mov ax, 'B'
 	int 0

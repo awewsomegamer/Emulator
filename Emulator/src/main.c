@@ -72,15 +72,14 @@ int main(int argc, char* argv[]){
 	init_ivt();
 	init_operator_functions();
 
-
 	while (true){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
 		uint32_t v1 = *(memory + registers[IP]+7) << 16 | *(memory + registers[IP]+6) << 12 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
 		uint32_t v2 = *(memory + registers[IP]+11) << 16 | *(memory + registers[IP]+10) << 12 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
 
-		// printf("%d %d %d %d\n", operation, indices, v1, v2);
-		
+		// printf("[0x%04X]: %d %d %d %d\n", registers[IP], operation, indices, v1, v2);
+
 		(*operation_fuctions[operation])(indices, v1, v2);
 
 		// print_regs();

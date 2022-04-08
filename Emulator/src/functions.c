@@ -133,7 +133,7 @@ void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
 void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     registers[IP] = v1 - 12;
-    printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
+    // printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
