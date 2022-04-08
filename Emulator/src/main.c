@@ -88,7 +88,7 @@ int main(int argc, char* argv[]){
 		registers[IP] += 12;
 
 		// Temporary emulator execution termination
-		if (registers[IP] >= 0x100)
+		if (registers[IP] >= 0x1000)
 			break;
 	}
 

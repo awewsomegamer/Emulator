@@ -15,8 +15,8 @@ MY_LOOP:
 	mov ax, 0xD
 	int 0
 
-	cmp ax, 100
-	jne MY_LOOP
+	cmp ax, 55
+	jnc MY_LOOP
 
 ;mov ax, 'E'
 ;int 0

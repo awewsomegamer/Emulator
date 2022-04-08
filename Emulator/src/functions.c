@@ -1,6 +1,8 @@
 #include <functions.h>
 #include <emulator.h>
 
+#define GET_REGISTER(value) (value / 16 - 1)
+
 void init_operator_functions(){
     // These take two arguments, and require indices in most cases
     operation_fuctions[1] = MOV_OPERATOR;
@@ -42,13 +44,13 @@ void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         memory[v1] = v2;
         break;
     case 1:
-	    registers[v1 / 16 - 1] = v2;
+	    registers[GET_REGISTER(v1)] = v2;
         break;
     case 2:
-		memory[v1] = registers[v2 / 16 - 1];
+		memory[v1] = registers[GET_REGISTER(v2)];
         break;
     case 3:
-		registers[v1 / 16 - 1] = registers[v2 / 16 - 1];
+		registers[GET_REGISTER(v1)] = registers[GET_REGISTER(v2)];
         break;
     }
 }
@@ -59,19 +61,32 @@ void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         memory[v1] = memory[v1]-v2;
         break;
     case 1:
-		registers[v1 / 16 - 1] = registers[v1 / 16 - 1]-v2;
+		registers[GET_REGISTER(v1)] = registers[GET_REGISTER(v1)]-v2;
         break;
     case 2:
-		memory[v1] = memory[v1]-registers[v2 / 16 - 1];
+		memory[v1] = memory[v1]-registers[GET_REGISTER(v2)];
         break;
     case 3:
-		registers[v1 / 16 - 1] = registers[v1 / 16 - 1]-registers[v2 / 16 - 1];
+		registers[GET_REGISTER(v1)] = registers[GET_REGISTER(v1)]-registers[GET_REGISTER(v2)];
         break;
     }
 }
 
 void ADD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-
+    switch(indices){
+    case 0:
+        memory[v1] = memory[v1]+v2;
+        break;
+    case 1:
+		registers[GET_REGISTER(v1)] = registers[GET_REGISTER(v1)]+v2;
+        break;
+    case 2:
+		memory[v1] = memory[v1]+registers[GET_REGISTER(v2)];
+        break;
+    case 3:
+		registers[GET_REGISTER(v1)] = registers[v1 / 16 - 1]+registers[GET_REGISTER(v2)];
+        break;
+    }
 }
 
 void DIV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -118,6 +133,7 @@ void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
 void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     registers[IP] = v1 - 12;
+    printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -133,7 +149,7 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     }
 
     case 1:{
-        value1 = registers[v1];
+        value1 = registers[GET_REGISTER(v1)];
         value2 = v2;
         
         break;
@@ -141,14 +157,14 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
     case 2:{
         value1 = v1;
-        value2 = registers[v2];
+        value2 = registers[GET_REGISTER(v1)];
         
         break;
     }
 
     case 3:{
-        value1 = registers[v1];
-        value2 = registers[v2];
+        value1 = registers[GET_REGISTER(v1)];
+        value2 = registers[GET_REGISTER(v2)];
         
         break;
     }
