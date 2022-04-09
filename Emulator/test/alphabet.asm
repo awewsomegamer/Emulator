@@ -27,3 +27,11 @@ E:
 	;nop
 	mov ax, 'B'
 	int 0
+	sub ax, 'A'
+	add ax, 1
+	mul ax, 2
+	add ax, 'A'
+	int 0
+
+	mov ax, 0xA
+	int 0

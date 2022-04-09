@@ -34,11 +34,12 @@ int main(int argc, char* argv[]){
 		if (startsWith(argv[i], "-org"))
 			start_address = atoi(argv[i+1]);
 
-		if (startsWith(argv[i], "-mmax"))
+		if (startsWith(argv[i], "-mmax")){
 			if (startsWith(argv[i+1], "h"))
 				max_memory = strtol(argv[i+2], NULL, 16);
 			else
 				max_memory = atoi(argv[i+1]);
+		}
 
 		if (startsWith(argv[i], "-h")){
 			printf("Visit https://github.com/awewsomegamer/Emulator/blob/main/README.md#cli-usage\n");
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]){
 	rewind(in_file);
 
 	if (max_memory * sizeof(uint32_t) < file_length){
-		printf("%08X bytes of memory not enough to hold program\n", max_memory);
+		printf("%08lX bytes of memory not enough to hold program\n", max_memory);
 		return 1;
 	}
 
