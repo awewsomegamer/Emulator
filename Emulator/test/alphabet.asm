@@ -1,3 +1,5 @@
+mov 0xADA, [LOOP]
+mov ax, [LOOP]
 mov dx, 'A'
 mov ax, dx
 

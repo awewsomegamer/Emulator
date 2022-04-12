@@ -31,14 +31,14 @@ typedef enum{
 uint16_t registers[REGISTER_MAX];
 
 typedef enum{
-	EQUAL_FLAG,
+	EQUAL_FLAG = 0,
 	GREATER_FLAG,
 	GREATER_EQU_FLAG,
 	ZERO_FLAG,
 	CARRY_FLAG,
 	FLAG_MAX
 } FLAGS_T;
-uint8_t flags[FLAG_MAX];
+extern uint8_t flags;
 
 typedef enum{
 	NOP = 0,
