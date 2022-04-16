@@ -141,231 +141,328 @@ void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] - v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] -= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] - v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] -= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] - registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] -= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] - registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] -= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] - memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] -= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] - memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] -= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] -= v2;
         break;
     }
 }
 
 void ADD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] + v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] += v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] + v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] += registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] + registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] += memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] + registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] += memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] + memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] += registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] + memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] += registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] += v2;
         break;
     }
 }
 
 void DIV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] / v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] /= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] / v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] /= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] / registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] /= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] / registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] /= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] / memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] /= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] / memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] /= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] /= v2;
         break;
     }
 }
 
 void MUL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] * v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] *= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] * v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] *= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] * registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] *= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] * registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] *= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] * memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] *= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] * memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] *= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] *= v2;
         break;
     }
 }
 
 void AND_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] & v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] &= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] & v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] &= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] & registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] &= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] & registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] &= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] & memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] &= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] & memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] &= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] &= v2;
         break;
     }
 }
 
 void OR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] | v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] |= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] | v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] |= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] | registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] |= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] | registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] |= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] | memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] |= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] | memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] |= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] |= v2;
         break;
     }
 }
 
 void XOR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] ^ v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] ^= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] ^ v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] ^= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] ^ registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] ^= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] ^ registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] ^= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] ^ memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] ^= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] ^ memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] ^= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] ^= v2;
         break;
     }
 }
 
 void NOT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
+    switch (indices){
+    case 0x00:
+    case 0x03:
+    case 0x10:
+    case 0x13:
+    case 0x23:
         memory[v1] = ~memory[v1];
         break;
-    case 1:
-		registers[REGISTER(v1)] = ~registers[REGISTER(v1)];
+
+    case 0x22:
+    case 0x12:
+        memory[registers[REGISTER(v1)]] = ~memory[registers[REGISTER(v1)]];
         break;
-    case 2:
-		memory[v1] = ~memory[v1];
-        break;
-    case 3:
-		registers[REGISTER(v1)] = ~registers[REGISTER(v1)];
-        break;
-    case 4:
-        memory[v1] = ~memory[v1];
-        break;
-    case 5:
+
+    case 0x11:
+    case 0x01:
         registers[REGISTER(v1)] = ~registers[REGISTER(v1)];
-        break;
     }
 }
 
 void SHL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] << v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] <<= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] << v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] <<= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] << registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] <<= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] << registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] <<= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] << memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] <<= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] << memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] <<= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] <<= v2;
         break;
     }
 }
 
 void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
-        memory[v1] = memory[v1] >> v2;
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        memory[v1] >>= v2;
         break;
-    case 1:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] >> v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] >>= registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = memory[v1] >> registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] >>= memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v1)] >> registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] >>= memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v1] >> memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] >>= registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = registers[REGISTER(v1)] >> memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] >>= registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] >>= v2;
         break;
     }
 }
@@ -389,48 +486,34 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     uint32_t value1;
     uint32_t value2;
 
-    switch (indices){
-    case 0:{
+    switch(indices & 0xF){
+    case 0:
         value1 = v1;
-        value2 = v2;
-
         break;
-    }
-
-    case 1:{
+    case 1:
         value1 = registers[REGISTER(v1)];
-        value2 = v2;
-        
         break;
-    }
-
-    case 2:{
-        value1 = v1;
-        value2 = registers[REGISTER(v1)];
-        
+    case 2:
+        value1 = memory[registers[REGISTER(v1)]];
         break;
-    }
-
-    case 3:{
-        value1 = registers[REGISTER(v1)];
-        value2 = registers[REGISTER(v2)];
-        
-        break;
-    }
-
-    case 4:{
+    case 3:
         value1 = memory[v1];
-        value2 = memory[v2];
-
         break;
     }
 
-    case 5:{
-        value1 = registers[REGISTER(v1)];
-        value2 = memory[v2];
-        
+    switch((indices >> 4) & 0xF){
+    case 0:
+        value2 = v2;
         break;
-    }
+    case 1:
+        value2 = registers[REGISTER(v2)];
+        break;
+    case 2:
+        value2 = memory[registers[REGISTER(v2)]];
+        break;
+    case 3:
+        value2 = memory[v2];
+        break;
     }
 
     if (value1 == value2)
