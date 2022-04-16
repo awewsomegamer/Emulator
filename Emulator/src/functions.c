@@ -42,26 +42,102 @@ void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) {
 }
 
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    switch(indices){
-    case 0:
+    switch (indices){
+    case 0x00:
+    case 0x03:
         memory[v1] = v2;
         break;
-    case 1:
-	    registers[REGISTER(v1)] = v2;
+
+    case 0x10:
+    case 0x13:
+        memory[v1] = registers[REGISTER(v2)];
         break;
-    case 2:
-		memory[v1] = registers[REGISTER(v2)];
+
+    case 0x23:
+        memory[v1] = memory[registers[REGISTER(v2)]];
         break;
-    case 3:
-		registers[REGISTER(v1)] = registers[REGISTER(v2)];
+
+    case 0x22:
+        memory[registers[REGISTER(v1)]] = memory[registers[REGISTER(v2)]];
         break;
-    case 4:
-        memory[v1] = memory[v2];
+
+    case 0x12:
+        memory[registers[REGISTER(v1)]] = registers[REGISTER(v2)];
         break;
-    case 5:
-        registers[REGISTER(v1)] = memory[v2];
+
+    case 0x11:
+        registers[REGISTER(v1)] = registers[REGISTER(v2)];
+        break;
+
+    case 0x01:
+        registers[REGISTER(v1)] = v2;
         break;
     }
+
+    // case 0x00:
+    // case 0x03:
+    //     memory[v1] = v2;
+    //     break;
+    
+    // case 0x01:
+    //     registers[REGISTER(v1)] = v2;
+    //     break;
+    // case 0x10:
+    //     memory[v1] = registers[REGISTER(v1)];
+    //     break;
+    
+    // case 0x11:
+    //     registers[REGISTER(v1)] = registers[REGISTER(v2)];
+    //     break;
+
+    // case 0x13:
+    //     memory[v1] = registers[REGISTER(v2)];
+    //     break;
+    
+    // case 0x22:
+    //     memory[registers[REGISTER(v1)]] = memory[registers[REGISTER(v2)]];
+    //     break;
+
+    /* 
+    mov 0x100 or [0x100], 100 (0x00 0x03) (done)
+    mov 0x100 or [0x100], [100] (0x30 0x33)
+    mov ax, bx (0x11)
+    mov [ax], bx (0x21)
+    mov ax, [bx] (0x12)
+    mov ax, 100 (0x01)
+    mov [ax], 100 (0x20)
+    mov [ax], [bx] (0x22) (done)
+
+    -= Support =-
+    mov [0x100], 100 (0x00 0x03)
+    mov [0x100], ax (0x10 0x13)
+    mov [0x100], [ax] (0x23)
+    mov [ax], [bx] (0x22)
+    mov [ax], bx (0x12)
+    mov ax, bx (0x11)
+    mov ax, 100 (0x10)
+    */
+    
+    // switch(indices){
+    // case 0x00:
+    //     memory[v1] = v2;
+    //     break;
+    // case 0x01:
+	//     registers[REGISTER(v1)] = v2;
+    //     break;
+    // case 0x02:
+	// 	memory[v1] = registers[REGISTER(v2)];
+    //     break;
+    // case 0x11:
+	// 	registers[REGISTER(v1)] = registers[REGISTER(v2)];
+    //     break;
+    // case 0x40:
+    //     memory[v1] = memory[v2];
+    //     break;
+    // case 0x41:
+    //     registers[REGISTER(v1)] = memory[v2];
+    //     break;
+    // }
 }
 
 void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
