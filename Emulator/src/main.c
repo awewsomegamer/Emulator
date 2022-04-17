@@ -25,6 +25,7 @@ int main(int argc, char* argv[]){
 	int start_address = 0;
 	uint64_t max_memory = UINT16_MAX;
 
+	// Interpret arguments
 	for (int i = 1; i < argc; i++){
 		if (startsWith(argv[i], "-i")){
         	in_file = fopen(argv[i+1], "r");
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]){
 
 	}
 
+	// Initialize memory and stack
 	memory = (uint8_t*)malloc(max_memory * sizeof(uint32_t));
 	stack = (uint8_t*)malloc(8129 * sizeof(uint32_t));
 
@@ -67,29 +69,32 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 
-	for (int i = 0; i < file_length; i++)
+	// Load specified file into memory
+	for (int i = 0; i <= file_length; i++)
 		fread((memory+i+start_address), 1, 1, in_file);
 
+	// Initialize interrupt vector table and function pointers of each operator
 	init_ivt();
 	init_operator_functions();
 
+	// While program is running, read bytes of memory at IP, and call proper operation
 	while (true){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
 		uint32_t v1 = *(memory + registers[IP]+7) << 16 | *(memory + registers[IP]+6) << 12 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
 		uint32_t v2 = *(memory + registers[IP]+11) << 16 | *(memory + registers[IP]+10) << 12 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
 
-		// printf("[0x%04X]: %d %d %d %d\n", registers[IP], operation, indices, v1, v2);
-
-		(*operation_fuctions[operation])(indices, v1, v2);
-
-		// print_regs();
+		if (operation <= OPERATION_MAX)
+			(*operation_fuctions[operation])(indices, v1, v2);
 
 		registers[IP] += 12;
 
 		// Temporary emulator execution termination
-		if (registers[IP] >= 0x1000)
+		if (registers[IP] >= file_length + 12)
 			break;
+
+		if (registers[IP] >= max_memory)
+			registers[IP] = 0;
 	}
 
 	free(memory);

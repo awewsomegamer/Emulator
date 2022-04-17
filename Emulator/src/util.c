@@ -58,11 +58,11 @@ void removeCharacter(char* line, char c){
 
 void stack_push(uint32_t value){
 	stack[registers[SP]] = value;
-	registers[IP]++;
+	registers[SP]++;
 }
 
 void stack_pop(uint32_t reg){
-	registers[reg] = stack[registers[IP]];
-	stack[registers[IP]] = 0;
-	registers[IP]--;
+	registers[reg] = stack[registers[SP]];
+	stack[registers[SP]] = 0;
+	registers[SP]--;
 }

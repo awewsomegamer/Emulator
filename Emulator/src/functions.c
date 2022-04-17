@@ -5,36 +5,36 @@
 #define FLAG(flag) ((flags >> flag) & 0x1)
 #define FLAG_SET(flag, value) flags ^= (-value ^ flags) & (1 << flag);
 
-
+// Set pointers of the operator functions table to the proper functions
 void init_operator_functions(){
     // These take two arguments, and require indices in most cases
-    operation_fuctions[1] = MOV_OPERATOR;
-    operation_fuctions[2] = SUB_OPERATOR;
-    operation_fuctions[3] = ADD_OPERATOR;
-    operation_fuctions[4] = DIV_OPERATOR;
-    operation_fuctions[5] = MUL_OPERATOR;
-    operation_fuctions[6] = AND_OPERATOR;
-    operation_fuctions[7] = OR_OPERATOR;
-    operation_fuctions[8] = XOR_OPERATOR;
-    operation_fuctions[9] = NOT_OPERATOR;
-    operation_fuctions[10] = SHL_OPERATOR;
-    operation_fuctions[11] = SHR_OPERATOR;
+    operation_fuctions[MOV] = MOV_OPERATOR;
+    operation_fuctions[SUB] = SUB_OPERATOR;
+    operation_fuctions[ADD] = ADD_OPERATOR;
+    operation_fuctions[DIV] = DIV_OPERATOR;
+    operation_fuctions[MUL] = MUL_OPERATOR;
+    operation_fuctions[AND] = AND_OPERATOR;
+    operation_fuctions[OR] = OR_OPERATOR;
+    operation_fuctions[XOR] = XOR_OPERATOR;
+    operation_fuctions[NOT] = NOT_OPERATOR;
+    operation_fuctions[SHL] = SHL_OPERATOR;
+    operation_fuctions[SHR] = SHR_OPERATOR;
 
     // These only have one argument which should just be a label or address (doesn't require index logic)
-    operation_fuctions[12] = INT_OPERATOR; // This one takes a value, no address
-    operation_fuctions[13] = CALL_OPERATOR;
-    operation_fuctions[14] = JMP_OPERATOR;
-    operation_fuctions[15] = CMP_OPERATOR;
-    operation_fuctions[16] = JE_OPERATOR;
-    operation_fuctions[17] = JNE_OPERATOR;
-    operation_fuctions[18] = JG_OPERATOR; // JZ
-    operation_fuctions[19] = JGE_OPERATOR; // JNZ
-    operation_fuctions[20] = JL_OPERATOR; // JC
-    operation_fuctions[21] = JLE_OPERATOR; // JNC
+    operation_fuctions[INT] = INT_OPERATOR; // This one takes a value, no address
+    operation_fuctions[CALL] = CALL_OPERATOR;
+    operation_fuctions[JMP] = JMP_OPERATOR;
+    operation_fuctions[CMP] = CMP_OPERATOR;
+    operation_fuctions[JE] = JE_OPERATOR;
+    operation_fuctions[JNE] = JNE_OPERATOR;
+    operation_fuctions[JG] = JG_OPERATOR; // JZ
+    operation_fuctions[JGE] = JGE_OPERATOR; // JNZ
+    operation_fuctions[JL] = JL_OPERATOR; // JC
+    operation_fuctions[JLE] = JLE_OPERATOR; // JNC
 
     // These takes no arguments
-    operation_fuctions[0] = NOP_OPERATOR;
-    operation_fuctions[22] = RET_OPERATOR;
+    operation_fuctions[NOP] = NOP_OPERATOR;
+    operation_fuctions[RET] = RET_OPERATOR;
 }
 
 void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) { 
@@ -43,101 +43,52 @@ void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) {
 
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     switch (indices){
+    // mov [0x100], 100
+    // mov 0x100, 100
     case 0x00:
     case 0x03:
         memory[v1] = v2;
         break;
 
+    // mov [0x100], ax
+    // mov 0x100, ax
     case 0x10:
     case 0x13:
         memory[v1] = registers[REGISTER(v2)];
         break;
 
+    // mov [0x100], [ax]
+    // mov 0x100, [ax]
     case 0x23:
+	case 0x20:
         memory[v1] = memory[registers[REGISTER(v2)]];
         break;
 
+    // mov [ax], [bx]
     case 0x22:
         memory[registers[REGISTER(v1)]] = memory[registers[REGISTER(v2)]];
         break;
 
+    // mov [ax], bx
     case 0x12:
         memory[registers[REGISTER(v1)]] = registers[REGISTER(v2)];
         break;
 
+    // mov ax, bx
     case 0x11:
         registers[REGISTER(v1)] = registers[REGISTER(v2)];
         break;
 
+    // mov ax, 100
     case 0x01:
         registers[REGISTER(v1)] = v2;
         break;
+    
+    // mov ax, [bx]
+    case 0x21:
+        registers[REGISTER(v1)] = memory[registers[REGISTER(v2)]];
+        break;
     }
-
-    // case 0x00:
-    // case 0x03:
-    //     memory[v1] = v2;
-    //     break;
-    
-    // case 0x01:
-    //     registers[REGISTER(v1)] = v2;
-    //     break;
-    // case 0x10:
-    //     memory[v1] = registers[REGISTER(v1)];
-    //     break;
-    
-    // case 0x11:
-    //     registers[REGISTER(v1)] = registers[REGISTER(v2)];
-    //     break;
-
-    // case 0x13:
-    //     memory[v1] = registers[REGISTER(v2)];
-    //     break;
-    
-    // case 0x22:
-    //     memory[registers[REGISTER(v1)]] = memory[registers[REGISTER(v2)]];
-    //     break;
-
-    /* 
-    mov 0x100 or [0x100], 100 (0x00 0x03) (done)
-    mov 0x100 or [0x100], [100] (0x30 0x33)
-    mov ax, bx (0x11)
-    mov [ax], bx (0x21)
-    mov ax, [bx] (0x12)
-    mov ax, 100 (0x01)
-    mov [ax], 100 (0x20)
-    mov [ax], [bx] (0x22) (done)
-
-    -= Support =-
-    mov [0x100], 100 (0x00 0x03)
-    mov [0x100], ax (0x10 0x13)
-    mov [0x100], [ax] (0x23)
-    mov [ax], [bx] (0x22)
-    mov [ax], bx (0x12)
-    mov ax, bx (0x11)
-    mov ax, 100 (0x10)
-    */
-    
-    // switch(indices){
-    // case 0x00:
-    //     memory[v1] = v2;
-    //     break;
-    // case 0x01:
-	//     registers[REGISTER(v1)] = v2;
-    //     break;
-    // case 0x02:
-	// 	memory[v1] = registers[REGISTER(v2)];
-    //     break;
-    // case 0x11:
-	// 	registers[REGISTER(v1)] = registers[REGISTER(v2)];
-    //     break;
-    // case 0x40:
-    //     memory[v1] = memory[v2];
-    //     break;
-    // case 0x41:
-    //     registers[REGISTER(v1)] = memory[v2];
-    //     break;
-    // }
 }
 
 void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -153,6 +104,7 @@ void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] -= memory[registers[REGISTER(v2)]];
         break;
 
@@ -171,6 +123,10 @@ void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] -= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] -= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -187,6 +143,7 @@ void ADD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] += memory[registers[REGISTER(v2)]];
         break;
 
@@ -205,6 +162,10 @@ void ADD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] += v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] += memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -221,6 +182,7 @@ void DIV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] /= memory[registers[REGISTER(v2)]];
         break;
 
@@ -239,6 +201,10 @@ void DIV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] /= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] /= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -255,6 +221,7 @@ void MUL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] *= memory[registers[REGISTER(v2)]];
         break;
 
@@ -273,6 +240,10 @@ void MUL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] *= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] *= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -289,6 +260,7 @@ void AND_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] &= memory[registers[REGISTER(v2)]];
         break;
 
@@ -307,6 +279,10 @@ void AND_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] &= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] &= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -323,6 +299,7 @@ void OR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] |= memory[registers[REGISTER(v2)]];
         break;
 
@@ -341,6 +318,10 @@ void OR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] |= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] |= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -357,6 +338,7 @@ void XOR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] ^= memory[registers[REGISTER(v2)]];
         break;
 
@@ -375,6 +357,10 @@ void XOR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] ^= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] ^= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -385,6 +371,7 @@ void NOT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x10:
     case 0x13:
     case 0x23:
+	case 0x20:
         memory[v1] = ~memory[v1];
         break;
 
@@ -395,7 +382,9 @@ void NOT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
     case 0x11:
     case 0x01:
+    case 0x21:
         registers[REGISTER(v1)] = ~registers[REGISTER(v1)];
+        break;
     }
 }
 
@@ -412,6 +401,7 @@ void SHL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] <<= memory[registers[REGISTER(v2)]];
         break;
 
@@ -430,6 +420,10 @@ void SHL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     case 0x01:
         registers[REGISTER(v1)] <<= v2;
         break;
+
+    case 0x21:
+        registers[REGISTER(v1)] <<= memory[registers[REGISTER(v2)]];
+        break;
     }
 }
 
@@ -446,6 +440,7 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x23:
+	case 0x20:
         memory[v1] >>= memory[registers[REGISTER(v2)]];
         break;
 
@@ -463,6 +458,10 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
     case 0x01:
         registers[REGISTER(v1)] >>= v2;
+        break;
+
+    case 0x21:
+        registers[REGISTER(v1)] >>= memory[registers[REGISTER(v2)]];
         break;
     }
 }
@@ -486,6 +485,7 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     uint32_t value1;
     uint32_t value2;
 
+    // Determine value of the first argument
     switch(indices & 0xF){
     case 0:
         value1 = v1;
@@ -501,6 +501,7 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
     }
 
+    // Determine the value of the second argument
     switch((indices >> 4) & 0xF){
     case 0:
         value2 = v2;
@@ -516,6 +517,7 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
     }
 
+    // Preform logic and set proper flags
     if (value1 == value2)
         FLAG_SET(EQUAL_FLAG, 1)
     else

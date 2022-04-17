@@ -1,10 +1,11 @@
 mov bx, My_String
 
 Print_Str:
-	cmp bx, 0
+	mov ax, [bx]
+
+	cmp ax, 0
 	je End
 
-	mov ax, [bx] ; Need to implement the [] for registers
 	int 0
 	
 	add bx, 1
@@ -12,12 +13,9 @@ Print_Str:
 	jmp Print_Str
 
 End:
-
+	mov ax, 0xA
+	int 0
+	int 0
 
 My_String:
 	ds "Hello World"
-
-; mov ax, 0xAA
-; mov bx, ax
-; mov cx, [ax]
-; mov dx, [0xAA]

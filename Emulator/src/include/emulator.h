@@ -59,15 +59,17 @@ typedef enum{
 	CMP,
 	JE,
 	JNE,
-	JZ,
-	JNZ,
-	JC,
-	JNC,
+	JG,
+	JGE,
+	JL,
+	JLE,
 	RET,
 	OPERATION_MAX
 } OPERATIONS_T;
+// List of operation functtion pointers
 void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint32_t, uint32_t);
 
+// Interrupt Vector Table
 void (*ivt[UINT8_MAX+1])();
 
 #endif
