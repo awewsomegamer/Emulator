@@ -28,7 +28,7 @@ typedef enum{
 	I4,
 	REGISTER_MAX
 } REGISTERS_T;
-uint16_t registers[REGISTER_MAX];
+uint32_t registers[REGISTER_MAX];
 
 typedef enum{
 	EQUAL_FLAG = 0,

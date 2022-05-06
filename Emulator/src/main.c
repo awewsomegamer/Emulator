@@ -3,20 +3,33 @@
 #include <interrupts.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <screen.h>
+#include <pthread.h>
 
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
-	printf("+-AX : %d\n", registers[0]);
-	printf("+-BX : %d\n", registers[1]);
-	printf("+-CX : %d\n", registers[2]);
-	printf("+-DX : %d\n", registers[3]);
-	printf("+-IP : %d\n", registers[4]);
-	printf("+-SP : %d\n", registers[5]);
-	printf("+-BP : %d\n", registers[6]);
-	printf("+-I1 : %d\n", registers[7]);
-	printf("+-I2 : %d\n", registers[8]);
-	printf("+-I3 : %d\n", registers[9]);
-	printf("+-I4 : %d\n", registers[10]);
+	printf("+-AX : %X\n", registers[0]);
+	printf("+-BX : %X\n", registers[1]);
+	printf("+-CX : %X\n", registers[2]);
+	printf("+-DX : %X\n", registers[3]);
+	printf("+-IP : %X\n", registers[4]);
+	printf("+-SP : %X\n", registers[5]);
+	printf("+-BP : %X\n", registers[6]);
+	printf("+-I1 : %X\n", registers[7]);
+	printf("+-I2 : %X\n", registers[8]);
+	printf("+-I3 : %X\n", registers[9]);
+	printf("+-I4 : %X\n", registers[10]);
+}
+
+int run_window(void* arg){
+	init_window();
+
+	while (running){
+		update();
+		render();
+	}
+
+	return 0;
 }
 
 int main(int argc, char* argv[]){
@@ -70,6 +83,9 @@ int main(int argc, char* argv[]){
 	}
 
 	// Load specified file into memory
+
+	memset(memory, 0, max_memory);
+
 	for (int i = 0; i <= file_length; i++)
 		fread((memory+i+start_address), 1, 1, in_file);
 
@@ -78,24 +94,31 @@ int main(int argc, char* argv[]){
 	init_operator_functions();
 
 	// While program is running, read bytes of memory at IP, and call proper operation
-	while (true){
+	SDL_Event event;
+	SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
+
+	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
-		uint32_t v1 = *(memory + registers[IP]+7) << 16 | *(memory + registers[IP]+6) << 12 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
-		uint32_t v2 = *(memory + registers[IP]+11) << 16 | *(memory + registers[IP]+10) << 12 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
+		uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
+		uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
 
-		if (operation <= OPERATION_MAX)
-			(*operation_fuctions[operation])(indices, v1, v2);
+		(*operation_fuctions[operation])(indices, v1, v2);
 
 		registers[IP] += 12;
 
 		// Temporary emulator execution termination
-		if (registers[IP] >= file_length + 12)
-			break;
+		// if (registers[IP] >= file_length + 12)
+		// 	break;
 
 		if (registers[IP] >= max_memory)
 			registers[IP] = 0;
 	}
+
+	SDL_WaitThread(window_thread, NULL);
+
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 
 	free(memory);
 	free(stack);
