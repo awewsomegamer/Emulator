@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <screen.h>
-#include <pthread.h>
+#include <sys/time.h>
 
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
@@ -96,6 +96,10 @@ int main(int argc, char* argv[]){
 	// While program is running, read bytes of memory at IP, and call proper operation
 	SDL_Event event;
 	SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
+	
+	int64_t ticks = 0;
+	time_t now_time = time(NULL);
+	time_t last_time = time(NULL);
 
 	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
@@ -107,9 +111,19 @@ int main(int argc, char* argv[]){
 
 		registers[IP] += 12;
 
+		ticks++;
+
 		// Temporary emulator execution termination
 		// if (registers[IP] >= file_length + 12)
 		// 	break;
+
+		now_time = time(NULL);
+
+		if (now_time - last_time >= 1){
+			printf("%ld TPS\n", ticks);
+			ticks = 0;
+			last_time = now_time;
+		}
 
 		if (registers[IP] >= max_memory)
 			registers[IP] = 0;

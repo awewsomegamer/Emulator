@@ -80,7 +80,7 @@ void render(){
 				break;
 
 			case PURPLE:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 102, 0, 102, 1);
 				break;
 
 			case BROWN:
