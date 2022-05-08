@@ -560,51 +560,50 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     }
 
     // Preform logic and set proper flags
-    if (value1 == value2)
-        FLAG_SET(EQUAL_FLAG, 1)
-    else
-        FLAG_SET(EQUAL_FLAG, 0)
+    // printf("%X %X (CMP)\n", value1, value2);
 
-    if (value1 > value2)
-        FLAG_SET(GREATER_FLAG, 1)
-    else
-        FLAG_SET(GREATER_FLAG, 0)
-
-    if (value1 >= value2)
-        FLAG_SET(GREATER_EQU_FLAG, 1)
-    else
-        FLAG_SET(GREATER_EQU_FLAG, 0)
-
-    // Implement Zero Flag and Carry Flag
+    if (value1 == value2){
+        FLAG_SET(ZERO_FLAG, 1)
+        FLAG_SET(CARRY_FLAG, 0)
+    }else if (value1 > value2){
+        FLAG_SET(ZERO_FLAG, 0)
+        FLAG_SET(CARRY_FLAG, 0)
+    }else if (value1 < value2){
+        FLAG_SET(ZERO_FLAG, 0)
+        FLAG_SET(CARRY_FLAG, 1)
+    }
 }
 
 void JE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (FLAG(EQUAL_FLAG))
+    // printf("%d (JE)\n", FLAG(ZERO_FLAG));
+    if (FLAG(ZERO_FLAG))
         JMP_OPERATOR(0, v1, 0);
 }
 
 void JNE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (!FLAG(EQUAL_FLAG))
+    if (!FLAG(ZERO_FLAG))
         JMP_OPERATOR(0, v1, 0);
 }
 
 void JG_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (FLAG(GREATER_FLAG))
+    if (!FLAG(ZERO_FLAG) && !FLAG(CARRY_FLAG))
         JMP_OPERATOR(0, v1, 0);
 }
 
 void JGE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (FLAG(GREATER_EQU_FLAG))
+    // printf("%d %d (JGE)\n", FLAG(ZERO_FLAG), (!FLAG(ZERO_FLAG) && !FLAG(CARRY_FLAG)));
+
+    if (FLAG(ZERO_FLAG) || (!FLAG(ZERO_FLAG) && !FLAG(CARRY_FLAG)))
         JMP_OPERATOR(0, v1, 0);
 }
 
 void JL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (!FLAG(GREATER_FLAG))
+    if (!FLAG(ZERO_FLAG) && FLAG(CARRY_FLAG))
         JMP_OPERATOR(0, v1, 0);
 }
 
 void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (!FLAG(GREATER_EQU_FLAG))
+    if (FLAG(ZERO_FLAG) || (!FLAG(ZERO_FLAG) && FLAG(CARRY_FLAG)))
         JMP_OPERATOR(0, v1, 0);
 }
 

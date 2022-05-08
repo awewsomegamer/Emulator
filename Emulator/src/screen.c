@@ -72,7 +72,7 @@ void render(){
 				break;
 
 			case LIGHT_BLUE:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 100, 149, 237, 1);
 				break;
 
 			case RED:
@@ -84,7 +84,7 @@ void render(){
 				break;
 
 			case BROWN:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 139, 69, 19, 1);
 				break;
 
 			case GREY:
@@ -96,27 +96,27 @@ void render(){
 				break;
 
 			case LIGHT_DARK_BLUE:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 0, 0, 205, 1);
 				break;
 
 			case CYAN:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 0, 255, 255, 1);
 				break;
 
 			case LIGHT_RED:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 255, 204, 203, 1);
 				break;
 				
 			case PINK:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 255, 0, 255, 1);
 				break;
 
 			case YELLOW:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 255, 255, 0, 1);
 				break;
 
 			case WHITE:
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 1);
 				break;
 			}
 

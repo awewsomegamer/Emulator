@@ -111,6 +111,8 @@ int main(int argc, char* argv[]){
 
 		registers[IP] += 12;
 
+		// print_regs();
+
 		ticks++;
 
 		// Temporary emulator execution termination
