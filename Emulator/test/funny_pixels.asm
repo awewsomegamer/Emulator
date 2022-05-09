@@ -169,41 +169,47 @@ mul cx, 480
 add cx, 0xB8000
 
 mov dx, 0
-mov i1, 1
+mov i1, 640
 
 LOOP:
-cmp bx, cx
-jge RESET
+	cmp bx, cx
+	jge RESET
 
-PLACE_PIXELS:
-mov [bx], ax
-add bx, 1
-add dx, 1
+	PLACE_PIXELS:
+		mov [bx], ax
+		add bx, 1
+		add dx, 1
 
-cmp dx, i1
-je PLACE_PIXELS_END
+		cmp dx, i1
+		je PLACE_PIXELS_END
 
-jmp PLACE_PIXELS
+		jmp PLACE_PIXELS
 
-PLACE_PIXELS_END:
-mov dx, 0
-add i1, 1
+	PLACE_PIXELS_END:
+		mov dx, 0
+		add i1, 1
 
-add ax, 1
+	add ax, 1
 
-cmp ax, 17
-jne END_AX_RESET
+	cmp ax, 17
+	jne END_AX_RESET
 
-mov ax, 0
+	mov ax, 0
 
-END_AX_RESET:
+	END_AX_RESET:
 
-jmp LOOP
+	jmp LOOP
 
 RESET:
-mov bx, 0xB8000
-mov i1, 1
-; mov ax, 0
+	mov bx, 0xB8000
+	; mov i1, 25
+	mov ax, 0
 
-jmp LOOP
+	jmp LOOP
 
+DATA_SECTION:
+jmp END_DATA
+
+
+
+END_DATA:

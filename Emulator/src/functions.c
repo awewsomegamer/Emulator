@@ -91,7 +91,7 @@ void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
     // mov [ax], 1
     case 0x02:
-        registers[REGISTER(v1)] = v2;
+        memory[registers[REGISTER(v1)]] = v2;
         break;
     }
 }
@@ -134,7 +134,7 @@ void SUB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] -= v2;
+        memory[registers[REGISTER(v1)]] -= v2;
         break;
     }
 }
@@ -177,7 +177,7 @@ void ADD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] += v2;
+        memory[registers[REGISTER(v1)]] += v2;
         break;
     }
 }
@@ -220,7 +220,7 @@ void DIV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] /= v2;
+        memory[registers[REGISTER(v1)]] /= v2;
         break;
     }
 }
@@ -263,7 +263,7 @@ void MUL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] *= v2;
+        memory[registers[REGISTER(v1)]] *= v2;
         break;
     }
 }
@@ -306,7 +306,7 @@ void AND_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] &= v2;
+        memory[registers[REGISTER(v1)]] &= v2;
         break;
     }
 }
@@ -349,7 +349,7 @@ void OR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] |= v2;
+        memory[registers[REGISTER(v1)]] |= v2;
         break;
     }
 }
@@ -392,7 +392,7 @@ void XOR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] ^= v2;
+        memory[registers[REGISTER(v1)]] ^= v2;
         break;
     }
 }
@@ -460,7 +460,7 @@ void SHL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] <<= v2;
+        memory[registers[REGISTER(v1)]] <<= v2;
         break;
     }
 }
@@ -503,7 +503,7 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         break;
 
     case 0x02:
-        registers[REGISTER(v1)] >>= v2;
+        memory[registers[REGISTER(v1)]] >>= v2;
         break;
     }
 }
