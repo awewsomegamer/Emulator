@@ -12,7 +12,7 @@
 extern const char* CLI_USAGE;
 
 extern uint8_t* memory;
-extern uint8_t* stack;
+// extern uint8_t* stack;
 
 typedef enum{
 	A = 0,
@@ -64,6 +64,9 @@ typedef enum{
 	JL,
 	JLE,
 	RET,
+	INCLUDE,
+	PUSH,
+	POP,
 	OPERATION_MAX
 } OPERATIONS_T;
 // List of operation functtion pointers

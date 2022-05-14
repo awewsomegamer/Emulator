@@ -1,7 +1,7 @@
 #include <functions.h>
 #include <emulator.h>
 
-#define REGISTER(value) (value / 16 - 1)
+#define REGISTER(value) (value / 16) > 5 ? ((value / 16) - 1) : (value / 16)
 #define FLAG(flag) ((flags >> flag) & 0x1)
 #define FLAG_SET(flag, value) flags ^= (-value ^ flags) & (1 << flag);
 
@@ -31,6 +31,8 @@ void init_operator_functions(){
     operation_fuctions[JGE] = JGE_OPERATOR; // JNZ
     operation_fuctions[JL] = JL_OPERATOR; // JC
     operation_fuctions[JLE] = JLE_OPERATOR; // JNC
+    operation_fuctions[PUSH] = PUSH_OPERATOR;
+    operation_fuctions[POP] = POP_OPERATOR;
 
     // These takes no arguments
     operation_fuctions[NOP] = NOP_OPERATOR;
@@ -508,19 +510,58 @@ void SHR_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     }
 }
 
-void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (v1 == 0)
-        (*ivt[v1])();
+void PUSH_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    switch (indices){
+    case 0x00:
+    case 0x03:
+        stack_push(v1);
+        break;
+
+    case 0x10:
+    case 0x13:
+    case 0x23:
+	case 0x20:
+        stack_push(memory[v1]);
+        break;
+
+
+    case 0x12:
+    case 0x22:
+    case 0x02:
+        stack_push(memory[registers[REGISTER(v1)]]);
+        break;
+
+    case 0x11:
+    case 0x01:
+    case 0x21:
+        stack_push(registers[REGISTER(v1)]);
+        break;
+    }
 }
 
-void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    stack_push(registers[IP]);
-    registers[IP] = v1 - 12;
-}
+void POP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    switch (indices){
+    case 0x00:
+    case 0x03:
+    case 0x10:
+    case 0x13:
+    case 0x23:
+	case 0x20:
+        memory[v1] = stack_pop();
+        break;
 
-void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    registers[IP] = v1 - 12;
-    // printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
+    case 0x12:
+    case 0x22:
+    case 0x02:
+        memory[registers[REGISTER(v1)]] = stack_pop();
+        break;
+
+    case 0x11:
+    case 0x01:
+    case 0x21:
+        registers[REGISTER(v1)] = stack_pop();
+        break;
+    }
 }
 
 void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -607,6 +648,21 @@ void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
         JMP_OPERATOR(0, v1, 0);
 }
 
+void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (v1 == 0)
+        (*ivt[v1])();
+}
+
+void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    stack_push(registers[IP]);
+    registers[IP] = v1 - 12;
+}
+
+void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    registers[IP] = v1 - 12;
+    // printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
+}
+
 // void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 //     if (flags[ZERO_FLAG])
 //         JMP_OPERATOR(0, v1, 0);
@@ -628,7 +684,5 @@ void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 // }
 
 void RET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    registers[IP] = stack[registers[SP]]; // Should always be address to return to, need to figure out better solution later
-    stack[registers[SP]] = 0;
-    registers[SP]--;
+    registers[IP] = stack_pop(); // Should always be address to return to, need to figure out better solution later
 }

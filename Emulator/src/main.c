@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
 
 	// Initialize memory and stack
 	memory = (uint8_t*)malloc(max_memory * sizeof(uint32_t));
-	stack = (uint8_t*)malloc(8129 * sizeof(uint32_t));
+	// stack = (uint8_t*)malloc(8129 * sizeof(uint32_t));
 
 	if (in_file_set == false){
 		printf("No program was specified\n");
@@ -107,6 +107,7 @@ int main(int argc, char* argv[]){
 		uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
 		uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
 
+		// printf("%X %X %X %X\n", operation, indices, v1, v2);
 		(*operation_fuctions[operation])(indices, v1, v2);
 
 		registers[IP] += 12;
@@ -117,7 +118,7 @@ int main(int argc, char* argv[]){
 
 		// Temporary emulator execution termination
 		// if (registers[IP] >= file_length + 12)
-		// 	break;
+		// 	running = false;
 
 		// now_time = time(NULL);
 
@@ -137,7 +138,7 @@ int main(int argc, char* argv[]){
 	SDL_Quit();
 
 	free(memory);
-	free(stack);
+	// free(stack);
 
 	return 0;
 }

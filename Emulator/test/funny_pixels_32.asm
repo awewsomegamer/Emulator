@@ -1,3 +1,22 @@
+; mov bp, 0x8000
+; mov sp, bp
+
+; push 'A'
+; push 'B'
+
+; mov ax, 'Z'
+
+; pop ax
+; pop ax
+
+
+; LOOP:
+; 	int 0
+; 	jmp LOOP
+
+push 'A'
+pop ax
+
 mov i1, 0 ; R
 mov i2, 0 ; G
 mov i3, 0 ; B
@@ -62,6 +81,12 @@ LOOP:
 	jmp LOOP
 
 RESET:
+	push ax
+	mov ax, 0xA
+	int 0
+	pop ax
+	int 0
+
 	mov bx, 0xB8000
 
 	jmp LOOP
