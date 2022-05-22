@@ -13,6 +13,7 @@ extern const char* CLI_USAGE;
 
 extern uint8_t* memory;
 // extern uint8_t* stack;
+extern uint8_t* ports;
 
 typedef enum{
 	A = 0,
@@ -30,10 +31,14 @@ typedef enum{
 } REGISTERS_T;
 uint32_t registers[REGISTER_MAX];
 
+static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add", 
+										"div", "mul", "and", "or", "xor", 
+										"not", "shl", "shr", "int", "call",
+										"jmp", "cmp", "je", "jne", "jg", "jge",
+										"jl", "jle", "ret", "inc", "push", "pop"};
+
 typedef enum{
-	EQUAL_FLAG = 0,
-	GREATER_FLAG,
-	OVERFLOW_FLAG,
+	OVERFLOW_FLAG = 0,
 	ZERO_FLAG,
 	CARRY_FLAG,
 	FLAG_MAX

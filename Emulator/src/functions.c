@@ -1,7 +1,7 @@
 #include <functions.h>
 #include <emulator.h>
 
-#define REGISTER(value) (value / 16) > 5 ? ((value / 16) - 1) : (value / 16)
+#define REGISTER(value) value / 16
 #define FLAG(flag) ((flags >> flag) & 0x1)
 #define FLAG_SET(flag, value) flags ^= (-value ^ flags) & (1 << flag);
 
@@ -604,12 +604,15 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     // printf("%X %X (CMP)\n", value1, value2);
 
     if (value1 == value2){
+        // printf("%c = %c\n", value1, value2);
         FLAG_SET(ZERO_FLAG, 1)
         FLAG_SET(CARRY_FLAG, 0)
     }else if (value1 > value2){
+        // printf("%c > %c\n", value1, value2);
         FLAG_SET(ZERO_FLAG, 0)
         FLAG_SET(CARRY_FLAG, 0)
     }else if (value1 < value2){
+        // printf("%c < %c\n", value1, value2);
         FLAG_SET(ZERO_FLAG, 0)
         FLAG_SET(CARRY_FLAG, 1)
     }
@@ -649,8 +652,7 @@ void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    if (v1 == 0)
-        (*ivt[v1])();
+    (*ivt[v1])();
 }
 
 void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){

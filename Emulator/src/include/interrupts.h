@@ -7,5 +7,6 @@
 void init_ivt();
 
 void ivt_0();
+void ivt_1();
 
 #endif

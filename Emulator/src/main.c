@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <screen.h>
+#include <IO.h>
 #include <sys/time.h>
 
 void print_regs(){
@@ -26,8 +27,8 @@ int run_window(void* arg){
 
 	while (running){
 		update();
-		render();
-	}
+		// render();
+	}	
 
 	return 0;
 }
@@ -64,6 +65,7 @@ int main(int argc, char* argv[]){
 
 	// Initialize memory and stack
 	memory = (uint8_t*)malloc(max_memory * sizeof(uint32_t));
+	ports = (uint8_t*)malloc(1024 * sizeof(uint32_t));
 	// stack = (uint8_t*)malloc(8129 * sizeof(uint32_t));
 
 	if (in_file_set == false){
@@ -94,13 +96,12 @@ int main(int argc, char* argv[]){
 	init_operator_functions();
 
 	// While program is running, read bytes of memory at IP, and call proper operation
-	SDL_Event event;
 	SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
 	
 	// int64_t ticks = 0;
 	// time_t now_time = time(NULL);
 	// time_t last_time = time(NULL);
-
+	
 	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
@@ -111,6 +112,10 @@ int main(int argc, char* argv[]){
 		(*operation_fuctions[operation])(indices, v1, v2);
 
 		registers[IP] += 12;
+		// printf("IA: %X:\n", registers[IP]);
+
+
+		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);
 
 		// print_regs();
 
@@ -133,8 +138,6 @@ int main(int argc, char* argv[]){
 	}
 
 	SDL_WaitThread(window_thread, NULL);
-
-	SDL_DestroyWindow(window);
 	SDL_Quit();
 
 	free(memory);
