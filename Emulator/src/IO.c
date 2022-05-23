@@ -1,4 +1,5 @@
 #include <IO.h>
+#include <interrupts.h>
 #include <emulator.h>
 
 void outb(uint16_t address, uint8_t value){
@@ -25,4 +26,26 @@ void outd(uint16_t address, uint32_t value){
 
 uint32_t ind(uint16_t address){
 	return inw(address) | inw(address + 1) << 16;
+}
+
+void call_hardware_interrupt(int interrupt, int data, int data_size, int data_location){
+	switch(data_size){
+	case 1:
+		outb(data_location, data);
+		break;
+
+	case 2:
+		outw(data_location, data);
+		break;
+
+	case 4:
+		outd(data_location, data);
+		break;
+
+	default:
+		printf("ERROR: Unsupported size call_hardware_interrupt() IO.c\n");
+		break;
+	}
+
+	(*ivt[interrupt])();
 }

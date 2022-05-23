@@ -1,6 +1,7 @@
 #include <screen.h>
 #include <SDL2/SDL.h>
 #include <emulator.h>
+#include <IO.h>
 
 bool running = true;
 SDL_Window* window;
@@ -40,7 +41,7 @@ void init_window(){
 
 void update(){
 	SDL_PollEvent(&event);
-
+	
 	switch(event.type){
 	case SDL_QUIT:
 		running = false;
@@ -48,28 +49,22 @@ void update(){
 		SDL_DestroyWindow(window);
 
 		break;
+	case SDL_KEYDOWN:
+		call_hardware_interrupt(2, (0x00) << 16 | event.key.keysym.scancode, 4, 0x0);
+		
+		break;
 
+	case SDL_KEYUP:
+		call_hardware_interrupt(2, (0xFF) << 16 | event.key.keysym.scancode, 4, 0x0);
+
+		break;
 	}
+
+	SDL_RenderPresent(renderer);
 }
 
-// void render(){
-// 	for (int i = 0; i < 480; i++){
-// 		for (int j = 0; j < 640; j++){
-// 			uint8_t r = memory[((i * 640 + j) * 4 + 0) + (0xB8000)];
-// 			uint8_t g = memory[((i * 640 + j) * 4 + 1) + (0xB8000)];
-// 			uint8_t b = memory[((i * 640 + j) * 4 + 2) + (0xB8000)];
-// 			uint8_t a = memory[((i * 640 + j) * 4 + 3) + (0xB8000)];
-
-// 			SDL_SetRenderDrawColor(renderer, r, g, b, a);
-// 			SDL_RenderDrawPoint(renderer, j, i); // Causes window closing to be slow
-// 		}
-// 	}
-
-
-// 	SDL_RenderPresent(renderer);
-// }
-
-void draw_pixel(int position, int abgr){
-	SDL_SetRenderDrawColor(renderer, abgr & 0xFF, (abgr >> 8) & 0xFF, (abgr >> 16) & 0xFF, (abgr >> 24) & 0xFF);
-	SDL_RenderDrawPoint(renderer, position % WINDOW_WIDTH,  position / WINDOW_WIDTH); // Causes window closing to be slow
+// Position: uint16_t x, uint16_t y
+void draw_pixel(uint32_t position, int rgba){
+	SDL_SetRenderDrawColor(renderer, (rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
+	SDL_RenderDrawPoint(renderer, (position >> 16) & 0xFFFF, position & 0xFFFF);
 }

@@ -12,4 +12,6 @@ uint16_t inw(uint16_t address);
 void outd(uint16_t address, uint32_t value);
 uint32_t ind(uint16_t address);
 
+void call_hardware_interrupt(int interrupt, int data, int data_size, int data_location);
+
 #endif

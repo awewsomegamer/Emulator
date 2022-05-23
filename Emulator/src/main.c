@@ -25,10 +25,8 @@ void print_regs(){
 int run_window(void* arg){
 	init_window();
 
-	while (running){
+	while (running)
 		update();
-		// render();
-	}	
 
 	return 0;
 }
@@ -97,7 +95,7 @@ int main(int argc, char* argv[]){
 
 	// While program is running, read bytes of memory at IP, and call proper operation
 	SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
-	
+
 	// int64_t ticks = 0;
 	// time_t now_time = time(NULL);
 	// time_t last_time = time(NULL);

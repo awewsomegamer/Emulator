@@ -52,7 +52,6 @@ LOOP:
 	jmp COMMON_END_STUB
 	END_ARROW_LEFT_SEC:
 
-
 	COMMON_END_STUB:
 
 	add bx, 1
