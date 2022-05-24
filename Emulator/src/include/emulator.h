@@ -58,6 +58,8 @@ typedef enum{
 	NOT,
 	SHL,
 	SHR,
+	SIVTE,
+	RIVTE,
 	INT,
 	CALL,
 	JMP,

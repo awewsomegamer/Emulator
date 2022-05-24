@@ -18,6 +18,8 @@ void XOR_OPERATOR(uint8_t, uint32_t, uint32_t);
 void NOT_OPERATOR(uint8_t, uint32_t, uint32_t);
 void SHL_OPERATOR(uint8_t, uint32_t, uint32_t);
 void SHR_OPERATOR(uint8_t, uint32_t, uint32_t);
+void SIVTE_OPERATOR(uint8_t, uint32_t, uint32_t);
+void RIVTE_OPERATOR(uint8_t, uint32_t, uint32_t);
 void INT_OPERATOR(uint8_t, uint32_t, uint32_t);
 void CALL_OPERATOR(uint8_t, uint32_t, uint32_t);
 void JMP_OPERATOR(uint8_t, uint32_t, uint32_t);

@@ -1,5 +1,6 @@
 #include <functions.h>
 #include <emulator.h>
+#include <interrupts.h>
 
 #define REGISTER(value) value / 16
 #define FLAG(flag) ((flags >> flag) & 0x1)
@@ -21,6 +22,7 @@ void init_operator_functions(){
     operation_fuctions[SHR] = SHR_OPERATOR;
 
     // These only have one argument which should just be a label or address (doesn't require index logic)
+    operation_fuctions[SIVTE] =  SIVTE_OPERATOR;
     operation_fuctions[INT] = INT_OPERATOR; // This one takes a value, no address
     operation_fuctions[CALL] = CALL_OPERATOR;
     operation_fuctions[JMP] = JMP_OPERATOR;
@@ -652,7 +654,7 @@ void JLE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    (*ivt[v1])();
+    call_interrupt(v1);
 }
 
 void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
@@ -663,6 +665,67 @@ void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 void JMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     registers[IP] = v1 - 12;
     // printf("%04X : %04X\n", memory[registers[IP]], registers[IP]);
+}
+
+void SIVTE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    uint32_t value1;
+    uint32_t value2;
+
+    // Determine value of the first argument
+    switch(indices & 0xF){
+    case 0:
+        value1 = v1;
+        break;
+    case 1:
+        value1 = registers[REGISTER(v1)];
+        break;
+    case 2:
+        value1 = memory[registers[REGISTER(v1)]];
+        break;
+    case 3:
+        value1 = memory[v1];
+        break;
+    }
+
+    // Determine the value of the second argument
+    switch((indices >> 4) & 0xF){
+    case 0:
+        value2 = v2;
+        break;
+    case 1:
+        value2 = registers[REGISTER(v2)];
+        break;
+    case 2:
+        value2 = memory[registers[REGISTER(v2)]];
+        break;
+    case 3:
+        value2 = memory[v2];
+        break;
+    }
+
+    define_interrupt(value1, value2);
+}
+
+void RIVTE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    uint32_t value1;
+
+    // Determine value of the first argument
+    switch(indices & 0xF){
+    case 0:
+        value1 = v1;
+        break;
+    case 1:
+        value1 = registers[REGISTER(v1)];
+        break;
+    case 2:
+        value1 = memory[registers[REGISTER(v1)]];
+        break;
+    case 3:
+        value1 = memory[v1];
+        break;
+    }
+
+    undefine_interrupt(value1);
 }
 
 // void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){

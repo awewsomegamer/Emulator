@@ -47,5 +47,5 @@ void call_hardware_interrupt(int interrupt, int data, int data_size, int data_lo
 		break;
 	}
 
-	(*ivt[interrupt])();
+	call_interrupt(interrupt);
 }
