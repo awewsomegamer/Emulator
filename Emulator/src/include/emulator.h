@@ -33,9 +33,9 @@ uint32_t registers[REGISTER_MAX];
 
 static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add", 
 										"div", "mul", "and", "or", "xor", 
-										"not", "shl", "shr", "int", "call",
+										"not", "shl", "shr", "sivte", "rivte" "int", "call",
 										"jmp", "cmp", "je", "jne", "jg", "jge",
-										"jl", "jle", "ret", "inc", "push", "pop"};
+										"jl", "jle", "jz", "jnz", "jc", "jnc", "ret", "inc", "push", "pop"};
 
 typedef enum{
 	OVERFLOW_FLAG = 0,
@@ -70,6 +70,10 @@ typedef enum{
 	JGE,
 	JL,
 	JLE,
+	JZ,
+	JNZ,
+	JC,
+	JNC,
 	RET,
 	INCLUDE,
 	PUSH,

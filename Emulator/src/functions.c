@@ -29,10 +29,14 @@ void init_operator_functions(){
     operation_fuctions[CMP] = CMP_OPERATOR;
     operation_fuctions[JE] = JE_OPERATOR;
     operation_fuctions[JNE] = JNE_OPERATOR;
-    operation_fuctions[JG] = JG_OPERATOR; // JZ
-    operation_fuctions[JGE] = JGE_OPERATOR; // JNZ
-    operation_fuctions[JL] = JL_OPERATOR; // JC
-    operation_fuctions[JLE] = JLE_OPERATOR; // JNC
+    operation_fuctions[JG] = JG_OPERATOR;
+    operation_fuctions[JGE] = JGE_OPERATOR;
+    operation_fuctions[JL] = JL_OPERATOR;
+    operation_fuctions[JLE] = JLE_OPERATOR;
+    operation_fuctions[JZ] = JZ_OPERATOR;
+    operation_fuctions[JNZ] = JNZ_OPERATOR;
+    operation_fuctions[JC] = JC_OPERATOR;
+    operation_fuctions[JNC] = JNC_OPERATOR;
     operation_fuctions[PUSH] = PUSH_OPERATOR;
     operation_fuctions[POP] = POP_OPERATOR;
 
@@ -620,6 +624,26 @@ void CMP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     }
 }
 
+void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (FLAG(ZERO_FLAG))
+        JMP_OPERATOR(0, v1, 0);
+}
+
+void JNZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (!FLAG(ZERO_FLAG))
+        JMP_OPERATOR(0, v1, 0);
+}
+
+void JC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (FLAG(CARRY_FLAG))
+        JMP_OPERATOR(0, v1, 0);
+}
+
+void JNC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    if (!FLAG(ZERO_FLAG))
+        JMP_OPERATOR(0, v1, 0);
+}
+
 void JE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     // printf("%d (JE)\n", FLAG(ZERO_FLAG));
     if (FLAG(ZERO_FLAG))
@@ -727,26 +751,6 @@ void RIVTE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
     undefine_interrupt(value1);
 }
-
-// void JZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-//     if (flags[ZERO_FLAG])
-//         JMP_OPERATOR(0, v1, 0);
-// }
-
-// void JNZ_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-//     if (!flags[ZERO_FLAG])
-//         JMP_OPERATOR(0, v1, 0);
-// }
-
-// void JC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-//     if (flags[CARRY_FLAG])
-//         JMP_OPERATOR(0, v1, 0);
-// }
-
-// void JNC_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-//     if (!flags[CARRY_FLAG])
-//         JMP_OPERATOR(0, v1, 0);
-// }
 
 void RET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     registers[IP] = stack_pop(); // Should always be address to return to, need to figure out better solution later

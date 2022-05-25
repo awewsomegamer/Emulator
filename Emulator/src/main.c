@@ -112,6 +112,8 @@ int main(int argc, char* argv[]){
 		registers[IP] += 12;
 		// printf("IA: %X:\n", registers[IP]);
 
+		printf("\n%s %X %X %X %X\n", OPERATION_T_NAMES[operation], operation, indices, v1, v2);
+
 
 		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);
 

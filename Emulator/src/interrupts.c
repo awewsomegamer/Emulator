@@ -44,7 +44,7 @@ void ivt_0(){
 // I1 -> 0xAABBGGRR
 
 void ivt_1(){
-    // draw_pixel(registers[A], registers[I1]);
+    draw_pixel(registers[A], registers[I1]);
 }
 
 // Keyboard interrupt
