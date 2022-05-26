@@ -105,6 +105,7 @@ int main(int argc, char* argv[]){
 		uint8_t indices =  *(memory + registers[IP]+1);
 		uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
 		uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
+		// printf("\n%s %X %X %X %X\n", OPERATION_T_NAMES[operation], operation, indices, v1, v2);
 
 		// printf("%X %X %X %X\n", operation, indices, v1, v2);
 		(*operation_fuctions[operation])(indices, v1, v2);
@@ -112,7 +113,6 @@ int main(int argc, char* argv[]){
 		registers[IP] += 12;
 		// printf("IA: %X:\n", registers[IP]);
 
-		printf("\n%s %X %X %X %X\n", OPERATION_T_NAMES[operation], operation, indices, v1, v2);
 
 
 		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);

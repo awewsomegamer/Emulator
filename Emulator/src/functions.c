@@ -23,6 +23,7 @@ void init_operator_functions(){
 
     // These only have one argument which should just be a label or address (doesn't require index logic)
     operation_fuctions[SIVTE] =  SIVTE_OPERATOR;
+    operation_fuctions[RIVTE] =  RIVTE_OPERATOR;
     operation_fuctions[INT] = INT_OPERATOR; // This one takes a value, no address
     operation_fuctions[CALL] = CALL_OPERATOR;
     operation_fuctions[JMP] = JMP_OPERATOR;
