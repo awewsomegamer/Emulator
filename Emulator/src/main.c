@@ -22,14 +22,14 @@ void print_regs(){
 	printf("+-I4 : %X\n", registers[10]);
 }
 
-int run_window(void* arg){
-	init_window();
+// int run_window(void* arg){
+// 	init_window();
 
-	while (running)
-		update();
+// 	while (running)
+// 		update();
 
-	return 0;
-}
+// 	return 0;
+// }
 
 int main(int argc, char* argv[]){
 	FILE* in_file;
@@ -94,12 +94,14 @@ int main(int argc, char* argv[]){
 	init_operator_functions();
 
 	// While program is running, read bytes of memory at IP, and call proper operation
-	SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
+	// SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
 
 	// int64_t ticks = 0;
 	// time_t now_time = time(NULL);
 	// time_t last_time = time(NULL);
-	
+
+	init_window();
+
 	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
@@ -113,7 +115,7 @@ int main(int argc, char* argv[]){
 		registers[IP] += 12;
 		// printf("IA: %X:\n", registers[IP]);
 
-
+		update();
 
 		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);
 
@@ -137,7 +139,7 @@ int main(int argc, char* argv[]){
 			registers[IP] = 0;
 	}
 
-	SDL_WaitThread(window_thread, NULL);
+	// SDL_WaitThread(window_thread, NULL);
 	SDL_Quit();
 
 	free(memory);

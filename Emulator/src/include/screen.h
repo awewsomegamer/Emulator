@@ -13,6 +13,6 @@ extern SDL_Window* window;
 
 void init_window();
 void update();
-void draw_pixel(uint32_t p, int abgr);
+void draw_pixel(uint32_t position, int rgba);
 
 #endif

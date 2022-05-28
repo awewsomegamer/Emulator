@@ -7,9 +7,13 @@
 bool defined_interrupts[256];
 uint32_t defined_interrupt_ptrs[256];
 
-
 // Set pointers of the IVT to the proper functions
 void init_ivt(){
+    for (int i = 0; i < 256; i++){
+        defined_interrupts[i] = false;
+        defined_interrupt_ptrs[i] = 0;
+    }
+
     ivt[0] = ivt_0;
     ivt[1] = ivt_1;
     ivt[2] = ivt_2;
@@ -40,11 +44,11 @@ void ivt_0(){
 }
 
 // Place pixel
-// AX -> Index (y * WIDTH + x)
-// I1 -> 0xAABBGGRR
+// I1 -> (X << 16)  | Y
+// I2 -> 0xRRGGBBAA
 
 void ivt_1(){
-    draw_pixel(registers[A], registers[I1]);
+    draw_pixel(registers[I1], registers[I2]);
 }
 
 // Keyboard interrupt

@@ -32,7 +32,8 @@ void init_window(){
 		exit(1);
 	}
 
-	SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, 0, &window, &renderer);
+	window = SDL_CreateWindow("CPU", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+	renderer = SDL_CreateRenderer(window, -1, 0);
 
 	SDL_SetWindowTitle(window, "CPU");
 
@@ -41,7 +42,7 @@ void init_window(){
 
 void update(){
 	SDL_PollEvent(&event);
-	
+
 	switch(event.type){
 	case SDL_QUIT:
 		running = false;

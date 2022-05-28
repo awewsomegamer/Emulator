@@ -2,7 +2,7 @@
 #include <emulator.h>
 #include <interrupts.h>
 
-#define REGISTER(value) value / 16
+#define REGISTER(value) (value / 16) > 5 ? ((value / 16) - 1) : (value / 16)
 #define FLAG(flag) ((flags >> flag) & 0x1)
 #define FLAG_SET(flag, value) flags ^= (-value ^ flags) & (1 << flag);
 
