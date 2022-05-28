@@ -25,9 +25,15 @@ LOOP:
 	jmp LOOP
 
 KEY_INTERRUPT:
+	ind ax, 0
+	and ax, 0xFF
+	cmp ax, 4
+	jne END_INT
+
 	mov ax, 'A'
 	int 0
 
+	END_INT:
 	ret
 
 ; LOOP:

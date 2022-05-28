@@ -36,6 +36,12 @@ void JC_OPERATOR(uint8_t, uint32_t, uint32_t);
 void JNC_OPERATOR(uint8_t, uint32_t, uint32_t);
 void PUSH_OPERATOR(uint8_t, uint32_t, uint32_t);
 void POP_OPERATOR(uint8_t, uint32_t, uint32_t);
+void INB_OPERATOR(uint8_t, uint32_t, uint32_t);
+void INW_OPERATOR(uint8_t, uint32_t, uint32_t);
+void IND_OPERATOR(uint8_t, uint32_t, uint32_t);
+void OUTB_OPERATOR(uint8_t, uint32_t, uint32_t);
+void OUTW_OPERATOR(uint8_t, uint32_t, uint32_t);
+void OUTD_OPERATOR(uint8_t, uint32_t, uint32_t);
 void RET_OPERATOR(uint8_t, uint32_t, uint32_t);
 
 #endif

@@ -38,7 +38,8 @@ static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add",
 										  "jmp", "cmp", "je", "jne", "jg", 
 										  "jge", "jl", "jle", "jz", "jnz", 
 										  "jc", "jnc", "ret", "inc", "push", 
-										  "pop"};
+										  "pop", "inb", "inw", "ind", "outb", 
+										  "outw", "outd"};
 
 typedef enum{
 	OVERFLOW_FLAG = 0,
@@ -81,6 +82,12 @@ typedef enum{
 	INCLUDE,
 	PUSH,
 	POP,
+	INB,
+	INW,
+	IND,
+	OUTB,
+	OUTW,
+	OUTD,
 	OPERATION_MAX
 } OPERATIONS_T;
 // List of operation functtion pointers
