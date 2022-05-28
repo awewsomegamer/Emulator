@@ -4,8 +4,8 @@
 
 ; mov bp, PROGRAM_END
 ; add bp, 0x5000
-; mov bp, 0x1000
-; mov sp, bp
+mov bp, 0x1000
+mov sp, bp
 
 ; mov i1, 0
 ; mov i2, 0
@@ -22,8 +22,6 @@
 sivte 2, KEY_INTERRUPT
 
 LOOP:
-	call FUNNY
-
 	jmp LOOP
 
 KEY_INTERRUPT:
