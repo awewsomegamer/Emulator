@@ -26,15 +26,24 @@ LOOP:
 
 KEY_INTERRUPT:
 	ind ax, 0
-	and ax, 0xFF
-	cmp ax, 4
+	and ax, 0xFFFF00
+	cmp ax, 0xFFFF00
 	jne END_INT
 
-	mov ax, 'A'
+	ind ax, 0
+	and ax, 0xFF
+	mov bx, CHARACTERS
+	add bx, ax
+	mov ax, [bx]
+
 	int 0
 
 	END_INT:
 	ret
+
+CHARACTERS:
+	ds "    ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890     "
+
 
 ; LOOP:
 ; 	cmp [bx], '+'
