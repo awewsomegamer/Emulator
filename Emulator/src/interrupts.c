@@ -40,7 +40,7 @@ void call_interrupt(int interrupt){
 
 // Temporary print(AX)
 void ivt_0(){
-    printf("%c", registers[A]);
+    sputc(registers[A]);
 }
 
 // Place pixel

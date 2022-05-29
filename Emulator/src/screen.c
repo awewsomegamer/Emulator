@@ -8,6 +8,9 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event event;
 
+int cursor_x = 0;
+int cursor_y = 0;
+
 // typedef enum {
 // 	BLACK = 0,
 // 	BLUE,
@@ -68,4 +71,30 @@ void update(){
 void draw_pixel(uint32_t position, int rgba){
 	SDL_SetRenderDrawColor(renderer, (rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
 	SDL_RenderDrawPoint(renderer, (position >> 16) & 0xFFFF, position & 0xFFFF);
+}
+
+void sputc(char c){
+	int glyph = FONT_ADDRESS + (c * GLYPH_HEIGHT);
+
+	int jj = 0;
+
+	for (int i = 0; i < GLYPH_HEIGHT; i++){
+		for (int j = GLYPH_WIDTH-1; j >= 0; j--){
+			if ((memory[glyph + i] >> j) & 1){
+				draw_pixel(((cursor_x + jj) << 16) | (cursor_y + i), 0xFFFFFF00);
+			}
+
+			jj++;
+		}
+
+		jj = 0;
+	}
+
+	cursor_x += GLYPH_WIDTH;
+
+	if (cursor_x >= 640){
+		cursor_x = 0;
+		cursor_y++;
+	}
+
 }

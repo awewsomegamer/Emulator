@@ -33,6 +33,9 @@ void print_regs(){
 
 int main(int argc, char* argv[]){
 	FILE* in_file;
+	FILE* font_file;
+	font_file = fopen("FONT.bin", "r");
+
 	bool in_file_set = false;
 	int start_address = 0;
 	uint64_t max_memory = UINT16_MAX;
@@ -75,7 +78,12 @@ int main(int argc, char* argv[]){
 	fseek(in_file, 0, SEEK_END);
 	file_length = ftell(in_file);
 
+	long font_length = 0;
+	fseek(font_file, 0, SEEK_END);
+	font_length = ftell(font_file);
+
 	rewind(in_file);
+	rewind(font_file);
 
 	if (max_memory * sizeof(uint32_t) < file_length){
 		printf("%08lX bytes of memory not enough to hold program\n", max_memory);
@@ -87,7 +95,10 @@ int main(int argc, char* argv[]){
 	memset(memory, 0, max_memory);
 
 	for (int i = 0; i <= file_length; i++)
-		fread((memory+i+start_address), 1, 1, in_file);
+		fread((memory + i + start_address), 1, 1, in_file);
+
+	for (int i = 0; i <= font_length; i++)
+		fread((memory + i + FONT_ADDRESS), 1, 1, font_file);
 
 	// Initialize interrupt vector table and function pointers of each operator
 	init_ivt();
