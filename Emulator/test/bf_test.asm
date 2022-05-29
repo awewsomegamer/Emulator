@@ -25,19 +25,61 @@ LOOP:
 	jmp LOOP
 
 KEY_INTERRUPT:
+	; Determine if key was pressed or released, in the case of the latter just end the interrupt
 	ind ax, 0
 	and ax, 0xFFFF00
 	cmp ax, 0xFFFF00
 	jne END_INT
 
+	;
 	ind ax, 0
 	and ax, 0xFF
+
+	; Check if backspace key was pressed
+	cmp ax, 42
+	je HANDLE_BACKSPACE
+
+	; Print regular character
 	mov bx, CHARACTERS
 	add bx, ax
 	mov ax, [bx]
+	mov bx, 0
 
 	int 0
+	
+	jmp END_INT
 
+	HANDLE_BACKSPACE:
+
+	; Update cursor
+	mov bx, 2
+	int 0
+	mov bx, ax
+	and bx, 0xFFFF
+	shr ax, 16
+	sub ax, 8
+	shl ax, 16
+	or ax, bx
+	mov bx, 1
+	int 0
+
+	; Clear char
+	mov ax, ' '
+	mov bx, 0
+	int 0
+
+	; Update cursor
+	mov bx, 2
+	int 0
+	mov bx, ax
+	and bx, 0xFFFF
+	shr ax, 16
+	sub ax, 8
+	shl ax, 16
+	or ax, bx
+	mov bx, 1
+	int 0
+	
 	END_INT:
 	ret
 

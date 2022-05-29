@@ -80,9 +80,7 @@ void sputc(char c){
 
 	for (int i = 0; i < GLYPH_HEIGHT; i++){
 		for (int j = GLYPH_WIDTH-1; j >= 0; j--){
-			if ((memory[glyph + i] >> j) & 1){
-				draw_pixel(((cursor_x + jj) << 16) | (cursor_y + i), 0xFFFFFF00);
-			}
+			draw_pixel(((cursor_x + jj) << 16) | (cursor_y + i), ((memory[glyph + i] >> j) & 1) ? FG : BG);
 
 			jj++;
 		}
@@ -92,9 +90,18 @@ void sputc(char c){
 
 	cursor_x += GLYPH_WIDTH;
 
-	if (cursor_x >= 640){
+	if (cursor_x >= WINDOW_WIDTH){
 		cursor_x = 0;
-		cursor_y++;
+		cursor_y += GLYPH_HEIGHT;
 	}
 
+}
+
+void set_cursor_position(int x, int y){
+	cursor_x = x;
+	cursor_y = y;
+}
+
+int get_cursor_position(){
+	return (cursor_x << 16) | cursor_y;
 }
