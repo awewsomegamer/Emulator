@@ -42,12 +42,19 @@ void call_interrupt(int interrupt){
 // AX Char / uint16_t x | uint16_t y
 // BX Mode (0 print, 1 set cursor position, 2 get cursor position)
 void ivt_0(){
-    if (registers[B] == 1)
+    if (registers[B] == 1){
         set_cursor_position((registers[A] >> 16) & 0xFFFF, registers[A] & 0xFFFF);
-    else if(registers[B] == 2)
+    } else if(registers[B] == 2){
         registers[A] = get_cursor_position();
-    else
+    } else if (registers[B] == 3){
+        char number_string[64];
+        print_regs();
+        sprintf(number_string, "%d", registers[A]);
+        for (int i = 0; i < strlen(number_string); i++)
+            sputc(number_string[i]);
+    } else{
         sputc(registers[A]);
+    }
 }
 
 // Place pixel

@@ -96,4 +96,6 @@ void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint32_t, uint32_t);
 // Interrupt Vector Table
 void (*ivt[UINT8_MAX+1])();
 
+void print_regs();
+
 #endif

@@ -7,6 +7,15 @@
 #include <IO.h>
 #include <sys/time.h>
 
+// int run_window(void* arg){
+// 	init_window();
+
+// 	while (running)
+// 		update();
+
+// 	return 0;
+// }
+
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
 	printf("+-AX : %X\n", registers[0]);
@@ -21,15 +30,6 @@ void print_regs(){
 	printf("+-I3 : %X\n", registers[9]);
 	printf("+-I4 : %X\n", registers[10]);
 }
-
-// int run_window(void* arg){
-// 	init_window();
-
-// 	while (running)
-// 		update();
-
-// 	return 0;
-// }
 
 int main(int argc, char* argv[]){
 	FILE* in_file;
