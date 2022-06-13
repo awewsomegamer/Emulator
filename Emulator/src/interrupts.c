@@ -14,9 +14,11 @@ void init_ivt(){
         defined_interrupt_ptrs[i] = 0;
     }
 
-    ivt[0] = ivt_0;
-    ivt[1] = ivt_1;
-    ivt[2] = ivt_2;
+    ivt[0] = IVT_0;
+    ivt[1] = IVT_1;
+    ivt[2] = IVT_2; // Disk functions
+    ivt[3] = IVT_NOP; // Keyboard interrupt
+
 }
 
 void define_interrupt(int interrupt, int address){
@@ -38,17 +40,18 @@ void call_interrupt(int interrupt){
     }
 }
 
+void IVT_NOP(){ }
+
 // Temporary print(AX)
 // AX Char / uint16_t x | uint16_t y
 // BX Mode (0 print, 1 set cursor position, 2 get cursor position)
-void ivt_0(){
+void IVT_0(){
     if (registers[B] == 1){
         set_cursor_position((registers[A] >> 16) & 0xFFFF, registers[A] & 0xFFFF);
     } else if(registers[B] == 2){
         registers[A] = get_cursor_position();
     } else if (registers[B] == 3){
         char number_string[64];
-        print_regs();
         sprintf(number_string, "%d", registers[A]);
         for (int i = 0; i < strlen(number_string); i++)
             sputc(number_string[i]);
@@ -61,13 +64,22 @@ void ivt_0(){
 // I1 -> (X << 16)  | Y
 // I2 -> 0xRRGGBBAA
 
-void ivt_1(){
+void IVT_1(){
     draw_pixel(registers[I1], registers[I2]);
 }
 
-// Keyboard interrupt
-// IO Port 0x0 -> keyboard input
-// Defined by user
-void ivt_2(){
-    
+// Disk functions
+// AX - 0 = read, 1 = write
+// BX - Buffer pointer (where to write / read from)
+// CX - Start Sector
+// DX - Sector count
+// I1 - Will be later used for disk specific
+
+void IVT_2(){
+    if (!registers[A]){ // Read 
+        fseek(disk, registers[C] * 512, SEEK_SET);
+        fread(memory + registers[B], registers[D] * 512, 1, disk);
+    }else { // Write
+        
+    }
 }

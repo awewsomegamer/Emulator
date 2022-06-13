@@ -57,6 +57,9 @@ int main(int argc, char* argv[]){
 				max_memory = atoi(argv[i+1]);
 		}
 
+		if (startsWith(argv[i], "-disk"))
+			disk = fopen(argv[i+1], "rw++");
+
 		if (startsWith(argv[i], "-h")){
 			printf("Visit https://github.com/awewsomegamer/Emulator/blob/main/README.md#cli-usage\n");
 			return 0;
@@ -155,6 +158,8 @@ int main(int argc, char* argv[]){
 
 	free(memory);
 	// free(stack);
+
+	fclose(disk);
 
 	return 0;
 }

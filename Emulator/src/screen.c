@@ -29,6 +29,14 @@ int cursor_y = 0;
 // 	WHITE
 // } COLORS;
 
+void clear_screen(){
+	for (int i = 0; i < WINDOW_HEIGHT; i++){
+		for (int j = 0; j < WINDOW_WIDTH; j++){
+			draw_pixel((j << 16) | i, BG);
+		}
+	}
+}
+
 void init_window(){
 	if (SDL_Init(SDL_INIT_VIDEO) != 0){
 		printf("Failed to init SDL: %s\n", SDL_GetError());
@@ -41,6 +49,8 @@ void init_window(){
 	SDL_SetWindowTitle(window, "CPU");
 
 	SDL_ShowWindow(window);
+
+	clear_screen();
 }
 
 void update(){

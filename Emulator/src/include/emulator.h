@@ -15,6 +15,8 @@ extern uint8_t* memory;
 // extern uint8_t* stack;
 extern uint8_t* ports;
 
+extern FILE* disk;
+
 typedef enum{
 	A = 0,
 	B,
