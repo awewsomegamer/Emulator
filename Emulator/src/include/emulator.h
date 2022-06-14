@@ -1,6 +1,12 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
+
 #define LINE_SIZE 256
+
+#define BYTE 0x1
+#define KBYTE BYTE * 1000
+#define MBYTE KBYTE * 1000
+#define GBYTE MBYTE * 1000
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,6 +14,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <util.h>
+#include <error_handler.h>
 
 extern const char* CLI_USAGE;
 

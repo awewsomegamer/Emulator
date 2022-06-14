@@ -18,7 +18,6 @@ void init_ivt(){
     ivt[1] = IVT_1;
     ivt[2] = IVT_2; // Disk functions
     ivt[3] = IVT_NOP; // Keyboard interrupt
-
 }
 
 void define_interrupt(int interrupt, int address){
@@ -34,6 +33,7 @@ void undefine_interrupt(int interrupt){
 void call_interrupt(int interrupt){
     if (defined_interrupts[interrupt]){
         stack_push(registers[IP]);
+        printf("%08X calling interrupt\n", ind(0x0));
         registers[IP] = defined_interrupt_ptrs[interrupt];
     }else{
         (*ivt[interrupt])();
@@ -76,10 +76,10 @@ void IVT_1(){
 // I1 - Will be later used for disk specific
 
 void IVT_2(){
-    if (!registers[A]){ // Read 
-        fseek(disk, registers[C] * 512, SEEK_SET);
+    fseek(disk, registers[C] * 512, SEEK_SET);
+    
+    if (!registers[A])
         fread(memory + registers[B], registers[D] * 512, 1, disk);
-    }else { // Write
-        
-    }
+    else
+        fwrite(memory + registers[B], registers[D] * 512, 1, disk);
 }

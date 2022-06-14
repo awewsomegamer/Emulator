@@ -19,7 +19,7 @@ mov sp, bp
 ; int 1
 
 ; Successfully set interrupt (27/5/2022)
-sivte 2, KEY_INTERRUPT
+sivte 3, KEY_INTERRUPT
 
 LOOP:
 	jmp LOOP
@@ -27,8 +27,8 @@ LOOP:
 KEY_INTERRUPT:
 	; Determine if key was pressed or released, in the case of the latter just end the interrupt
 	ind ax, 0
-	and ax, 0xFFFF00
-	cmp ax, 0xFFFF00
+	and ax, 0x00FF0000
+	cmp ax, 0x00FF0000
 	jne END_INT
 
 	;

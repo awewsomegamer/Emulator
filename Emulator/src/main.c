@@ -94,7 +94,6 @@ int main(int argc, char* argv[]){
 	}
 
 	// Load specified file into memory
-
 	memset(memory, 0, max_memory);
 
 	for (int i = 0; i <= file_length; i++)

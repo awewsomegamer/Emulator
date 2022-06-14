@@ -21,11 +21,11 @@ uint16_t inw(uint16_t address){
 
 void outd(uint16_t address, uint32_t value){
 	outw(address, value & 0xFFFF);
-	outw(address + 1, (value >> 16) & 0xFFFF);
+	outw(address + 2, (value >> 16) & 0xFFFF);
 }
 
 uint32_t ind(uint16_t address){
-	return inw(address) | inw(address + 1) << 16;
+	return inw(address) | inw(address + 2) << 16;
 }
 
 void call_hardware_interrupt(int interrupt, int data, int data_size, int data_location){
