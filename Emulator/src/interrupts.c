@@ -14,10 +14,10 @@ void init_ivt(){
         defined_interrupt_ptrs[i] = 0;
     }
 
-    ivt[0] = IVT_0;
-    ivt[1] = IVT_1;
-    ivt[2] = IVT_2; // Disk functions
-    ivt[3] = IVT_NOP; // Keyboard interrupt
+    ivt[TIMER_INT] = IVT_0;
+    ivt[PRINT_INT] = IVT_1;
+    ivt[DISK_IO_INT] = IVT_2; // Disk functions
+    ivt[KEYBOARD_INT] = IVT_NOP; // Keyboard interrupt
 }
 
 void define_interrupt(int interrupt, int address){
@@ -33,7 +33,6 @@ void undefine_interrupt(int interrupt){
 void call_interrupt(int interrupt){
     if (defined_interrupts[interrupt]){
         stack_push(registers[IP]);
-        printf("%08X calling interrupt\n", ind(0x0));
         registers[IP] = defined_interrupt_ptrs[interrupt];
     }else{
         (*ivt[interrupt])();

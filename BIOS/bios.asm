@@ -22,7 +22,7 @@ LOAD_BOOT_SECTOR:
 	mov cx, 0x0
 	mov dx, 0x1
 
-	int 0x3
+	int 0x2
 
 	ret
 

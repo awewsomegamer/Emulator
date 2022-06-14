@@ -64,12 +64,12 @@ void update(){
 
 		break;
 	case SDL_KEYDOWN:
-		call_hardware_interrupt(3, (0x00) << 16 | event.key.keysym.scancode, 4, 0x0);
+		call_hardware_interrupt(KEYBOARD_INT, (0x00) << 16 | event.key.keysym.scancode, 4, 0x0);
 		
 		break;
 
 	case SDL_KEYUP:
-		call_hardware_interrupt(3, (0xFF) << 16 | event.key.keysym.scancode, 4, 0x0);
+		call_hardware_interrupt(KEYBOARD_INT, (0xFF) << 16 | event.key.keysym.scancode, 4, 0x0);
 
 		break;
 	}

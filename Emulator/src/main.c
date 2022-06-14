@@ -58,7 +58,7 @@ int main(int argc, char* argv[]){
 		}
 
 		if (startsWith(argv[i], "-disk"))
-			disk = fopen(argv[i+1], "rw++");
+			disk = fopen(argv[i+1], "rw");
 
 		if (startsWith(argv[i], "-h")){
 			printf("Visit https://github.com/awewsomegamer/Emulator/blob/main/README.md#cli-usage\n");

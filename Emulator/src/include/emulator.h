@@ -102,6 +102,13 @@ typedef enum{
 // List of operation functtion pointers
 void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint32_t, uint32_t);
 
+
+typedef enum {
+	TIMER_INT,
+	PRINT_INT,
+	DISK_IO_INT,
+	KEYBOARD_INT
+} INTERRUPT_T;
 // Interrupt Vector Table
 void (*ivt[UINT8_MAX+1])();
 
