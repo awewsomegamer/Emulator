@@ -6,8 +6,8 @@ Emulator for the Szikra assembler
 `-i` specifies input file (program terminates if this is not specified) <br>
 `-org` specifies where to load the program (defaults to 0) <br>
 `-mmax` specifies the maximum amount of 32 bit unsigned integers the program can use (defaults to 65535) <br>
-`-disk` specifies the binary "disk" to read from and write to.
-`-rom` specifies ROM, this includes the BIOS.
+`-disk` specifies the binary "disk" to read from and write to.<br>
+`-rom` specifies ROM, this includes the BIOS.<br>
 
 # Random Access Memory Map
 
