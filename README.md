@@ -28,8 +28,8 @@ No map
 		<th>Keyboard port</th>
 		<th>
 			<pre>
-			0 +--------------+ 16 +-----------------------------------+ 24 +------+ 32
-			  | SDL scancode |	  | 0x00 (Pressed) or 0xFF (Released) |	   | 0x00 |
+0 +--------------+ 16 +-----------------------------------+ 24 +------+ 32
+  | SDL scancode |    | 0x00 (Pressed) or 0xFF (Released) |    | 0x00 |
 			</pre>
 		</th>
 	</tr>
