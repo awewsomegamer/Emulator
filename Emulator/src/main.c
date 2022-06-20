@@ -35,7 +35,17 @@ int main(int argc, char* argv[]){
 	int i = 1;
 	int operation = 1;
 	
-	#define OPERATION 1
+	switch (operation){
+	case 0:
+		#define OPERATION 0
+		break;
+	case 1:
+		#define OPERATION 1
+		break;
+	case 2:
+		#define OPERATION 2
+		break;
+	}
 
 	i =
 	#if OPERATION == 1
