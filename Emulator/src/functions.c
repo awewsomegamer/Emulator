@@ -63,11 +63,26 @@ void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) {
 //                    ^   ^- v1 is reg | v2 is reg
 //                    `----- v1 is addr | v2 is addr
 void APPLY_OPERATION(uint32_t v1, uint32_t v2, uint8_t information, int operation){
-    // mov ax, 1
-    if (v1_reg && !v2_reg)
-        registers[REGISTER(v1)] = v2;
+    // mov [0x100], 100
+    // mov 0x100, 100
 
+    // mov [0x100], ax
+    // mov 0x100, ax
+
+    // mov [0x100], [ax]
+    // mov 0x100, [ax]
+
+    // mov [ax], [bx]
+
+    // mov [ax], bx
+
+    // mov ax, bx
+
+    // mov ax, 100
     
+    // mov ax, [bx]
+ 
+    // mov [ax], 1    
 }
 
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){

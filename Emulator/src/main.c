@@ -32,6 +32,25 @@ void print_regs(){
 }
 
 int main(int argc, char* argv[]){
+	int i = 1;
+	int operation = 1;
+	
+	// i
+	// #if operation == 1 
+	// +
+	// #endif
+	// = 5;
+	
+	i =
+	#if operation
+	i +
+	#endif
+	5;
+	
+	printf("%d\n", i);
+
+	return 0;
+
 	FILE* in_file;
 	FILE* font_file;
 	font_file = fopen("FONT.bin", "r");
@@ -114,6 +133,8 @@ int main(int argc, char* argv[]){
 	// time_t last_time = time(NULL);
 
 	init_window();
+
+
 
 	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
