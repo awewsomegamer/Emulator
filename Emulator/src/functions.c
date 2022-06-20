@@ -57,6 +57,10 @@ void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) {
     return;
 }
 
+void APPLY_OPERATION(uint32_t v1, uint32_t v2, bool v1_reg, bool v2_reg, int operation){
+    
+}
+
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     switch (indices){
     // mov [0x100], 100
