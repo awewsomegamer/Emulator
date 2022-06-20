@@ -31,30 +31,23 @@ void print_regs(){
 	printf("+-I4 : %X\n", registers[10]);
 }
 
+#define OPERATION(variable, value, operation) \
+	if (operation == 0) \
+		variable = value; \
+	else if (operation == 1) \
+		variable += value;
+
 int main(int argc, char* argv[]){
-	int i = 1;
+	int i = 10;
 	int operation = 1;
-	
-	switch (operation){
-	case 0:
-		#define OPERATION 0
-		break;
-	case 1:
-		#define OPERATION 1
-		break;
-	case 2:
-		#define OPERATION 2
-		break;
-	}
 
-	i =
-	#if OPERATION == 1
-	i +
-	#endif
-	5;
+	// if (operation == 0)
+	// 	i = 5;
+	// else
+	// 	i += 5;
 
-	#undef OPERATION
-	
+	OPERATION(i, 5, operation)
+
 	printf("%d\n", i);
 
 	return 0;
