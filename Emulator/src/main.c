@@ -35,17 +35,15 @@ int main(int argc, char* argv[]){
 	int i = 1;
 	int operation = 1;
 	
-	// i
-	// #if operation == 1 
-	// +
-	// #endif
-	// = 5;
-	
+	#define OPERATION 1
+
 	i =
-	#if operation
+	#if OPERATION == 1
 	i +
 	#endif
 	5;
+
+	#undef OPERATION
 	
 	printf("%d\n", i);
 
