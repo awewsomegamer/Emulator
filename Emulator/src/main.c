@@ -31,27 +31,7 @@ void print_regs(){
 	printf("+-I4 : %X\n", registers[10]);
 }
 
-#define OPERATION(variable, value, operation) \
-	if (operation == 0) \
-		variable = value; \
-	else if (operation == 1) \
-		variable += value;
-
 int main(int argc, char* argv[]){
-	int i = 10;
-	int operation = 1;
-
-	// if (operation == 0)
-	// 	i = 5;
-	// else
-	// 	i += 5;
-
-	OPERATION(i, 5, operation)
-
-	printf("%d\n", i);
-
-	return 0;
-
 	FILE* in_file;
 	FILE* font_file;
 	font_file = fopen("FONT.bin", "r");
@@ -116,11 +96,8 @@ int main(int argc, char* argv[]){
 	// Load specified file into memory
 	memset(memory, 0, max_memory);
 
-	for (int i = 0; i <= file_length; i++)
-		fread((memory + i + start_address), 1, 1, in_file);
-
-	for (int i = 0; i <= font_length; i++)
-		fread((memory + i + FONT_ADDRESS), 1, 1, font_file);
+	fread((memory + start_address), file_length, 1, in_file);
+	fread((memory + FONT_ADDRESS), font_length, 1, font_file);
 
 	// Initialize interrupt vector table and function pointers of each operator
 	init_ivt();
@@ -135,8 +112,6 @@ int main(int argc, char* argv[]){
 
 	init_window();
 
-
-
 	while (running){
 		uint8_t operation =  *(memory + registers[IP]);
 		uint8_t indices =  *(memory + registers[IP]+1);
@@ -145,7 +120,8 @@ int main(int argc, char* argv[]){
 		// printf("\n%s %X %X %X %X\n", OPERATION_T_NAMES[operation], operation, indices, v1, v2);
 
 		// printf("%X %X %X %X\n", operation, indices, v1, v2);
-		(*operation_fuctions[operation])(indices, v1, v2);
+		if (operation < OPERATION_MAX)
+			(*operation_fuctions[operation])(indices, v1, v2);
 
 		registers[IP] += 12;
 		// printf("IA: %X:\n", registers[IP]);

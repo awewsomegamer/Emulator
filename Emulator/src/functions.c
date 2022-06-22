@@ -6,6 +6,39 @@
 #define REGISTER(value) (value / 16) > 5 ? ((value / 16) - 1) : (value / 16)
 #define FLAG(flag) ((flags >> flag) & 0x1)
 #define FLAG_SET(flag, value) flags ^= (-value ^ flags) & (1 << flag);
+#define OPERATION(variable, value) \
+    if (operation == MOV) \
+        variable = value; \
+    else if (operation == ADD) \
+        variable += value; \
+    else if (operation == SUB) \
+        variable -= value; \
+    else if (operation == MUL) \
+        variable *= value; \
+    else if (operation == DIV) \
+        variable /= value; \
+    else if (operation == AND) \
+        variable &= value; \
+    else if (operation == OR) \
+        variable |= value; \
+    else if (operation == SHR) \
+        variable >>= value; \
+    else if (operation == SHL) \
+        variable <<= value; \
+    else if (operation == XOR) \
+        variable ^= value; \
+    else if (operation == INB) \
+        variable = inb(v2); \
+    else if (operation == INW) \
+        variable = inw(v2); \
+    else if (operation == IND) \
+        variable = ind(v2); \
+    else if (operation == OUTB) \
+        outb(v1, v2); \
+    else if (operation == OUTW) \
+        outw(v1, v2); \
+    else if (operation == OUTD) \
+        outd(v1, v2);
 
 // Set pointers of the operator functions table to the proper functions
 void init_operator_functions(){
@@ -18,7 +51,6 @@ void init_operator_functions(){
     operation_fuctions[AND] = AND_OPERATOR;
     operation_fuctions[OR] = OR_OPERATOR;
     operation_fuctions[XOR] = XOR_OPERATOR;
-    operation_fuctions[NOT] = NOT_OPERATOR;
     operation_fuctions[SHL] = SHL_OPERATOR;
     operation_fuctions[SHR] = SHR_OPERATOR;
     operation_fuctions[INB] = INB_OPERATOR;
@@ -29,6 +61,7 @@ void init_operator_functions(){
     operation_fuctions[OUTD] = OUTD_OPERATOR;
 
     // These only have one argument which should just be a label or address (doesn't require index logic)
+    operation_fuctions[NOT] = NOT_OPERATOR;
     operation_fuctions[SIVTE] =  SIVTE_OPERATOR;
     operation_fuctions[RIVTE] =  RIVTE_OPERATOR;
     operation_fuctions[INT] = INT_OPERATOR; // This one takes a value, no address
@@ -57,35 +90,88 @@ void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) {
     return;
 }
 
+// First section of operations initialized that use default layout
+void APPLY_OPERATION(uint32_t v1, uint32_t v2, uint16_t information, int operation){
+    bool v1_reg = false;
+    bool v2_reg = false;
+    bool v1_addr = false;
+    bool v2_addr = false;
 
+    // Transform information data into bools
+    uint8_t v1_idx = information & 0xF;
+    uint8_t v2_idx = (information >> 4) & 0xF;
 
-// infromation: 00 00 00 00
-//                    ^   ^- v1 is reg | v2 is reg
-//                    `----- v1 is addr | v2 is addr
-void APPLY_OPERATION(uint32_t v1, uint32_t v2, uint8_t information, int operation){
-    // mov [0x100], 100
-    // mov 0x100, 100
-
-    // mov [0x100], ax
-    // mov 0x100, ax
-
-    // mov [0x100], [ax]
-    // mov 0x100, [ax]
-
-    // mov [ax], [bx]
-
-    // mov [ax], bx
-
-    // mov ax, bx
-
-    // mov ax, 100
+    // uint8_t v1_sz = (information >> 8) & 0xF;
+    // uint8_t v2_sz = (information >> 12) & 0xF;
     
-    // mov ax, [bx]
- 
-    // mov [ax], 1    
+    switch (v1_idx){
+    case 0: v1_reg = false; v1_addr = true; break;
+    case 1: v1_reg = true; v1_addr = false; break;
+    case 2: v1_reg = true; v1_addr = true; break;
+    case 3: v1_reg = false; v1_addr = true; break;
+    }
+
+    switch (v2_idx){
+    case 0: v2_reg = false; break;
+    case 1: v2_reg = true; break;
+    case 2: v2_reg = true; v2_addr = true; break;
+    case 3: v2_reg = false; v2_addr = true; break;
+    }
+
+    printf("%d %d %d %d %X %X %04X\n", v1_reg, v2_reg, v1_addr, v2_addr, v1, v2, information);
+
+    // op [0x100], 100
+    // op 0x100, 100
+    if ((!v1_reg && v1_addr) && (!v2_reg && !v2_addr)){
+        OPERATION(memory[v1], v2)
+    }
+
+    // op [0x100], ax
+    // op 0x100, ax
+    if ((!v1_reg && v1_addr) && (v2_reg && !v2_addr)){
+        OPERATION(memory[v1], registers[REGISTER(v2)])
+    }
+
+    // op [0x100], [ax]
+    // op 0x100, [ax]
+    if ((!v1_reg && v1_addr) && (v2_reg && v2_addr)){
+        OPERATION(memory[v1], memory[registers[REGISTER(v2)]])
+    }
+
+    // op [ax], [bx]
+    if ((v1_addr && v1_reg) && (v2_reg && v2_addr)) {
+        OPERATION(memory[registers[REGISTER(v2)]], memory[registers[REGISTER(v2)]])
+    }
+
+    // op [ax], bx
+    if ((v1_addr && v1_reg) && (v2_reg && !v2_addr)){
+        OPERATION(memory[registers[REGISTER(v2)]], registers[REGISTER(v2)])
+    }
+
+    // op ax, bx
+    if ((!v1_addr && v1_reg) && (v2_reg && !v2_addr)){
+        OPERATION(registers[REGISTER(v2)], registers[REGISTER(v2)])
+    }
+
+    // op ax, 100
+    if ((!v1_addr && v1_reg) && (!v2_reg && !v2_addr)){
+        OPERATION(registers[REGISTER(v2)], v2)
+    }
+
+    // op ax, [bx]
+    if ((!v1_addr && v1_reg) && (v2_reg && v2_addr)){
+        OPERATION(registers[REGISTER(v2)], memory[registers[REGISTER(v2)]])
+    }
+
+    // op [ax], 1
+    if ((v1_addr && v1_reg) && (!v2_reg && !v2_addr)){
+        OPERATION(memory[registers[REGISTER(v2)]], v2)
+    }
 }
 
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    // uint16_t information = (0x00 << 8) | indices;
+    // APPLY_OPERATION(v1, v2, information, MOV);
     switch (indices){
     // mov [0x100], 100
     // mov 0x100, 100
