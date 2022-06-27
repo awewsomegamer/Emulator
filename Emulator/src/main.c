@@ -7,6 +7,20 @@
 #include <IO.h>
 #include <sys/time.h>
 
+bool IP_SET = true;
+
+#define GET_ARGUMENT_SIZE(value, idx) \ 
+	switch (OPERATION_T_ARGC[operation]){ \
+	case 0: \
+		value = 0; \
+		break; \
+	case 1: \
+	case 2: \
+		value = ((information >> ((idx * 2) + 4)) & 0b00000011) + 1; \
+		break; \
+	}
+	
+
 // int run_window(void* arg){
 // 	init_window();
 
@@ -113,20 +127,59 @@ int main(int argc, char* argv[]){
 	init_window();
 
 	while (running){
+		update();
+		
 		uint8_t operation =  *(memory + registers[IP]);
-		uint8_t indices =  *(memory + registers[IP]+1);
-		uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
-		uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
-		// printf("\n%s %X %X %X %X\n", OPERATION_T_NAMES[operation], operation, indices, v1, v2);
 
-		// printf("%X %X %X %X\n", operation, indices, v1, v2);
-		if (operation < OPERATION_MAX)
-			(*operation_fuctions[operation])(indices, v1, v2);
+		IP_SET = true;
 
-		registers[IP] += 12;
+		// printf("IP %X OP %d (%s) ", registers[IP], operation, OPERATION_T_NAMES[operation]);
+
+		if (OPERATION_T_ARGC[operation] == 0){
+			if (operation < OPERATION_MAX)
+			(*operation_fuctions[operation])(0, 0, 0);
+
+			if (IP_SET)
+				registers[IP]++;
+		}else {
+			uint8_t information =  *(memory + registers[IP]+1);
+			uint8_t indices = ((information & 0b00000011)) | (((information & 0b00001100) << 2));
+			
+			// for (int i = 7; i >= 0; i--)
+			// 	printf("%c", (((indices >> i) & 1) == 0 ? '0' : '1'));
+			// printf("%X\n", indices);
+
+			int v1_size = 0;
+			int v2_size = 0;
+
+			GET_ARGUMENT_SIZE(v1_size, 0);
+			GET_ARGUMENT_SIZE(v2_size, 1);
+
+			uint32_t v1 = 0;
+			uint32_t v2 = 0;
+
+			for (int i = v1_size - 1; i >= 0; i--)
+				v1 |= (memory[((registers[IP] + 2) + i)] << (i * 8));
+
+			for (int i = v2_size - 1; i >= 0; i--)
+				v2 |= (memory[((registers[IP] + 2 + v1_size) + i)] << (i * 8));
+
+			if (operation < OPERATION_MAX)
+				(*operation_fuctions[operation])(indices, v1, v2);
+
+			// printf("V1: %X V2: %X SIZE %d\n", v1, v2, v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2);
+
+
+			if (IP_SET)
+				registers[IP] += v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2;
+		}
+
+		// uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
+		// uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
+
+			
 		// printf("IA: %X:\n", registers[IP]);
 
-		update();
 
 		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);
 
@@ -160,3 +213,4 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
+
