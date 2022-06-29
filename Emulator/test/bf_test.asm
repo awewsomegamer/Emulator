@@ -44,7 +44,8 @@ KEY_INTERRUPT:
 	add bx, ax
 	mov ax, [bx]
 	mov bx, 0
-
+	
+	mov bx, 0
 	int 0
 	
 	jmp END_INT
@@ -84,7 +85,7 @@ KEY_INTERRUPT:
 	ret
 
 CHARACTERS:
-	ds "    ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890     "
+	ds "   ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890     "
 
 
 ; LOOP:

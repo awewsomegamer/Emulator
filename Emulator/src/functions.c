@@ -171,10 +171,6 @@ void APPLY_OPERATION(uint32_t v1, uint32_t v2, uint16_t information, int operati
 void MOV_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     // uint16_t information = (0x00 << 8) | indices;
     // APPLY_OPERATION(v1, v2, information, MOV);
-    printf("%02X INDICES %X V1 %X V2\n", indices, v1, v2);
-    
-    print_regs();
-
     switch (indices){
     // mov [0x100], 100
     // mov 0x100, 100

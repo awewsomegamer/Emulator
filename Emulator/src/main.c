@@ -126,6 +126,8 @@ int main(int argc, char* argv[]){
 
 	init_window();
 
+	// int jj = 0;
+	
 	while (running){
 		update();
 		
@@ -133,7 +135,7 @@ int main(int argc, char* argv[]){
 
 		IP_SET = true;
 
-		// printf("IP %X OP %d (%s) ", registers[IP], operation, OPERATION_T_NAMES[operation]);
+		// printf("IP %X OP %d (%s)\n", registers[IP], operation, OPERATION_T_NAMES[operation]);
 
 		if (OPERATION_T_ARGC[operation] == 0){
 			if (operation < OPERATION_MAX)

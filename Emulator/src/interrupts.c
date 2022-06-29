@@ -45,8 +45,6 @@ void IVT_NOP(){ }
 // AX Char / uint16_t x | uint16_t y
 // BX Mode (0 print, 1 set cursor position, 2 get cursor position)
 void IVT_0(){
-    printf("CHAR: %c\n", registers[A]);
-
     if (registers[B] == 1){
         set_cursor_position((registers[A] >> 16) & 0xFFFF, registers[A] & 0xFFFF);
     } else if(registers[B] == 2){
