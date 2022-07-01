@@ -14,6 +14,9 @@
 #define FG 0xFFFFFF00
 #define BG 0x0000FF00
 
+extern cursor_x;
+extern cursor_y;
+
 extern bool running;
 extern SDL_Window* window;
 

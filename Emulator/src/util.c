@@ -58,12 +58,13 @@ void removeCharacter(char* line, char c){
 
 void stack_push(uint32_t value){
 	// memory[--registers[SP]] = value;
+
 	memory[registers[SP]++] = value;
 }
 
 uint32_t stack_pop(){
 	uint32_t ret = memory[--registers[SP]]; //memory[registers[SP]++];
 	memory[registers[SP]] = 0;
-	
+
 	return ret;
 }

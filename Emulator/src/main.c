@@ -128,7 +128,7 @@ int main(int argc, char* argv[]){
 
 	// int jj = 0;
 	
-	while (running){
+	while (running) {
 		update();
 		
 		uint8_t operation =  *(memory + registers[IP]);
@@ -137,13 +137,12 @@ int main(int argc, char* argv[]){
 
 		// printf("IP %X OP %d (%s)\n", registers[IP], operation, OPERATION_T_NAMES[operation]);
 
-		if (OPERATION_T_ARGC[operation] == 0){
+		if (OPERATION_T_ARGC[operation] == 0) {
 			if (operation < OPERATION_MAX)
-			(*operation_fuctions[operation])(0, 0, 0);
+				(*operation_fuctions[operation])(0, 0, 0);
 
-			if (IP_SET)
-				registers[IP]++;
-		}else {
+			registers[IP]++;
+		} else {
 			uint8_t information =  *(memory + registers[IP]+1);
 			uint8_t indices = ((information & 0b00000011)) | (((information & 0b00001100) << 2));
 			
@@ -170,7 +169,6 @@ int main(int argc, char* argv[]){
 				(*operation_fuctions[operation])(indices, v1, v2);
 
 			// printf("V1: %X V2: %X SIZE %d\n", v1, v2, v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2);
-
 
 			if (IP_SET)
 				registers[IP] += v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2;

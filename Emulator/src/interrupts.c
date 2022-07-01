@@ -55,7 +55,19 @@ void IVT_0(){
         for (int i = 0; i < strlen(number_string); i++)
             sputc(number_string[i]);
     } else{
-        sputc(registers[A]);
+        char c = registers[A];
+
+        switch (c){
+        case '\n': 
+            cursor_x = 0;
+            cursor_y += GLYPH_HEIGHT;
+
+            break;
+
+        default:
+            sputc(c);
+            break;
+        }
     }
 }
 
