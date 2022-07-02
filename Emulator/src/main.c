@@ -5,9 +5,11 @@
 #include <assert.h>
 #include <screen.h>
 #include <IO.h>
+#include <clock.h>
 #include <sys/time.h>
 
 bool IP_SET = true;
+uint32_t ticks = 0;
 
 #define GET_ARGUMENT_SIZE(value, idx) \ 
 	switch (OPERATION_T_ARGC[operation]){ \
@@ -48,7 +50,7 @@ void print_regs(){
 int main(int argc, char* argv[]){
 	FILE* in_file;
 	FILE* font_file;
-	font_file = fopen("FONT.bin", "r");
+	font_file = fopen("new_font.bin", "r");
 
 	bool in_file_set = false;
 	int start_address = 0;
@@ -127,10 +129,15 @@ int main(int argc, char* argv[]){
 	init_window();
 
 	// int jj = 0;
-	
+
 	while (running) {
 		update();
+
+		// update_clock();
+		// generate_clock_signal();
 		
+		// ticks++;
+
 		uint8_t operation =  *(memory + registers[IP]);
 
 		IP_SET = true;

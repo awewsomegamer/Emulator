@@ -115,6 +115,35 @@ handle_keyboard:
 	sub CURRENT_BUFFER, 1
 	mov [CURRENT_BUFFER], 0x0
 
+	; Update cursor
+	mov bx, 2
+	int 0
+	mov bx, ax
+	and bx, 0xFFFF
+	shr ax, 16
+	sub ax, 8
+	shl ax, 16
+	or ax, bx
+	mov bx, 1
+	int 0
+
+	; Clear char
+	mov ax, ' '
+	mov bx, 0
+	int 0
+
+	; Update cursor
+	mov bx, 2
+	int 0
+	mov bx, ax
+	and bx, 0xFFFF
+	shr ax, 16
+	sub ax, 8
+	shl ax, 16
+	or ax, bx
+	mov bx, 1
+	int 0
+
 	jmp handle_keyboard_end
 
 	handle_keyboard_end:

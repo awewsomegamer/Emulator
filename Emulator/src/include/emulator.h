@@ -25,6 +25,7 @@ extern uint8_t* ports;
 extern FILE* disk;
 
 extern bool IP_SET;
+extern uint32_t ticks;
 
 typedef enum{
 	A = 0,
@@ -42,28 +43,6 @@ typedef enum{
 } REGISTERS_T;
 uint32_t registers[REGISTER_MAX];
 
-static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add", 
-										  "div", "mul", "and", "or", 
-										  "xor", "not", "shl", "shr",
-										  "sivte", "rivte", "int", "call", 
-										  "jmp", "cmp", "je", "jne", "jg", 
-										  "jge", "jl", "jle", "jz", "jnz", 
-										  "jc", "jnc", "ret", "inc", "push", 
-										  "pop", "inb", "inw", "ind", "outb", 
-										  "outw", "outd", "ds", "db"};
-
-static const uint8_t OPERATION_T_ARGC[] = {
-	0, 2, 2, 2,
-	2, 2, 2, 2,
-	2, 1, 2, 2,
-	2, 2, 1, 1,
-	1, 2, 1, 1, 1,
-	1, 1, 1, 1, 1,
-	1, 1, 0, 1, 1,
-	1, 2, 2, 2, 2,
-	2, 2, 3, 3
-};
-
 typedef enum{
 	OVERFLOW_FLAG = 0,
 	ZERO_FLAG,
@@ -72,7 +51,29 @@ typedef enum{
 } FLAGS_T;
 extern uint8_t flags;
 
-typedef enum{
+static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add", 
+										  "div", "mul", "and", "or", 
+										  "xor", "not", "shl", "shr",
+										  "sivte", "rivte", "int", "call", 
+										  "jmp", "cmp", "je", "jne", "jg", 
+										  "jge", "jl", "jle", "jz", "jnz", 
+										  "jc", "jnc", "ret", "push", 
+										  "pop", "inb", "inw", "ind", "outb", 
+										  "outw", "outd", "ds", "db", "inc"};
+
+static const uint8_t OPERATION_T_ARGC[] = {
+	0, 2, 2, 2,
+	2, 2, 2, 2,
+	2, 1, 2, 2,
+	2, 2, 1, 1,
+	1, 2, 1, 1, 1,
+	1, 1, 1, 1, 1,
+	1, 1, 1, 1,
+	1, 2, 2, 2, 2,
+	2, 2, 3, 3, 0
+};
+
+typedef enum {
 	NOP = 0,
 	MOV,
 	SUB,
@@ -102,7 +103,6 @@ typedef enum{
 	JC,
 	JNC,
 	RET,
-	INCLUDE,
 	PUSH,
 	POP,
 	INB,
@@ -111,8 +111,11 @@ typedef enum{
 	OUTB,
 	OUTW,
 	OUTD,
+	DEFINITION_STRING,
+	DEFINITION_BYTES,
+	INCLUDE,
 	OPERATION_MAX
-} OPERATIONS_T;
+} OPERATION_T;
 // List of operation functtion pointers
 void (*operation_fuctions[OPERATION_MAX])(uint8_t, uint32_t, uint32_t);
 

@@ -38,7 +38,7 @@ void clear_screen(){
 }
 
 void init_window(){
-	if (SDL_Init(SDL_INIT_VIDEO) != 0){
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0){
 		printf("Failed to init SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
@@ -86,16 +86,10 @@ void draw_pixel(uint32_t position, int rgba){
 void sputc(char c){
 	int glyph = FONT_ADDRESS + (c * GLYPH_HEIGHT);
 
-	int jj = 0;
-
 	for (int i = 0; i < GLYPH_HEIGHT; i++){
-		for (int j = GLYPH_WIDTH-1; j >= 0; j--){
-			draw_pixel(((cursor_x + jj) << 16) | (cursor_y + i), ((memory[glyph + i] >> j) & 1) ? FG : BG);
-
-			jj++;
+		for (int j = 0; j < GLYPH_WIDTH; j++){
+			draw_pixel(((cursor_x + j) << 16) | (cursor_y + i), ((memory[glyph + i] >> j) & 1) ? FG : BG);
 		}
-
-		jj = 0;
 	}
 
 	cursor_x += GLYPH_WIDTH;
