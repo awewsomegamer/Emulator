@@ -2,16 +2,9 @@
 #define AUDIO_H
 
 #include <emulator.h>
+#include <screen.h>
 
-// struct sound {
-// 	int frequency;
-// 	int amplitude;
-
-// 	int length;
-// 	int position = 0;
-// };
-
-// void play_frequency(uint32_t);
-// void play_stop();
+void play_frequency(int);
+void audio_enable(bool enable);
 
 #endif

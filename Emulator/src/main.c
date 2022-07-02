@@ -130,13 +130,16 @@ int main(int argc, char* argv[]){
 
 	// int jj = 0;
 
+	outb(CLOCK_WRITE, 0b01000001);
+	outd(CLOCK_DATA, 440);
+
 	while (running) {
 		update();
 
-		// update_clock();
-		// generate_clock_signal();
-		
-		// ticks++;
+		ticks++;
+
+		update_clock();
+		generate_clock_signal();
 
 		uint8_t operation =  *(memory + registers[IP]);
 

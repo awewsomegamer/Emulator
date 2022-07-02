@@ -13,6 +13,5 @@ void call_interrupt(int interrupt);
 void IVT_NOP();
 void IVT_0();
 void IVT_1();
-void IVT_2();
 
 #endif

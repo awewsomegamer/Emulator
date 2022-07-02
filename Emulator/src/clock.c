@@ -43,25 +43,32 @@ void update_clock() {
 }
 
 void generate_clock_signal() {
-	for (int i = 0; i < sizeof(channels) / sizeof(channels[0]); i++) {
-		uint8_t type = (channels[i] >> 4) & 3;
+	bool did_signal = false;
 
+	for (int i = 0; i < 2; i++) {
 		if (ticks % channel_frequencies[i] != 0)
-			continue;
+			i++;
 
 		switch (i) {
 		case 0:
-			call_interrupt(CLOCK_IRQ);
+			call_interrupt(TIMER_INT);
 
 			break;
 		
 		case 1:
-			// if (channels[i] & 1)
-			// 	play_frequency(channel_frequencies[i]);
-			// else
-			// 	stop_play();
+			printf("playing frequency %d %d\n", channel_frequencies[i], channels[i] & 1);
+
+			if (channels[i] & 1)
+				play_frequency(channel_frequencies[i]);
+			
+			audio_enable(channels[i] & 1);
 
 			break;
 		}
+
+		did_signal = true;
 	}
+
+	if (did_signal)
+		ticks = 0;
 }

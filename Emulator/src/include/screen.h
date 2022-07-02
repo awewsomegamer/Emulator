@@ -14,6 +14,8 @@
 #define FG 0xFFFFFF00
 #define BG 0x0000FF00
 
+extern SDL_AudioDeviceID audio_device;
+
 extern cursor_x;
 extern cursor_y;
 

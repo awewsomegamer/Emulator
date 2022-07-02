@@ -15,6 +15,7 @@
 #include <string.h>
 #include <util.h>
 #include <error_handler.h>
+#include <SDL2/SDL_audio.h>
 
 extern const char* CLI_USAGE;
 

@@ -3,6 +3,8 @@
 #include <emulator.h>
 #include <IO.h>
 
+SDL_AudioDeviceID audio_device;
+
 bool running = true;
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -49,6 +51,16 @@ void init_window(){
 	SDL_SetWindowTitle(window, "CPU");
 
 	SDL_ShowWindow(window);
+	
+	SDL_AudioSpec audio_spec;
+    SDL_zero(audio_spec);
+    audio_spec.freq = 44100;
+    audio_spec.format = AUDIO_S8;
+    audio_spec.channels = 1;
+    audio_spec.samples = 2048;
+    audio_spec.callback = NULL;
+
+    audio_device = SDL_OpenAudioDevice(NULL, 0, &audio_spec, NULL, 0);
 
 	clear_screen();
 }

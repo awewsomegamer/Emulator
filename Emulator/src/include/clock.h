@@ -5,8 +5,6 @@
 #define CLOCK_MASK 0x5
 #define CLOCK_DATA 0x6 // 0x6 -> 0x9
 
-#define CLOCK_IRQ 0x4
-
 #include <IO.h>
 #include <emulator.h>
 

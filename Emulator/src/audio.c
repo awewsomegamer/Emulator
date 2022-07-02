@@ -1,42 +1,16 @@
 #include <audio.h>
-#include <SDL2/SDL_audio.h>
 
-// bool playing = false;
+int next_sample = 0;
 
-// int SamplesPerSecond = 48000;
-// int16_t ToneVolume = 3000;
-// uint32_t RunningSampleIndex = 0;
-// int BytesPerSample = sizeof(int16_t) * 2;
+void play_frequency(int frequency){
+	for (int i = 0; i < 4800; i++) {
+		int period = 48000 / frequency;
+		int8_t sample = ((next_sample++ / (period / 2) % 2) ? 2 : -2);
 
-// void play_frequency(int frequecny){
+		SDL_QueueAudio(audio_device, &sample, sizeof(int8_t));
+	}	
+}
 
-// 	if (!playing){
-// 		int SquareWavePeriod = SamplesPerSecond / frequecny;
-// 		int HalfSquareWavePeriod = SquareWavePeriod / 2;
-// 		int BytesToWrite = 800 * BytesPerSample;
-		
-// 		void* SoundBuffer = malloc(BytesToWrite);
-// 		int16_t* SampleOut = (int16_t*) SoundBuffer;
-// 		int SampleCount = BytesToWrite/BytesPerSample;
-
-// 		for (int i = 0; i < SampleCount; i++){
-// 			int64_t v = ((RunningSampleIndex++ / HalfSquareWavePeriod) % 2) ? ToneVolume : -ToneVolume;
-// 			*SampleOut++ = v;
-// 			*SampleOut++ = v;
-// 		}
-
-// 		SDL_QueueAudio(1, SoundBuffer, BytesToWrite);
-// 		free(SoundBuffer);
-
-// 		SDL_PauseAudio(0);
-
-// 		playing = true;
-// 	}
-// }
-
-// void play_stop(){
-// 	SDL_PauseAudio(1);
-// 	playing = false;
-// }
-
-
+void audio_enable(bool enable){
+	SDL_PauseAudioDevice(audio_device, !enable);
+}
