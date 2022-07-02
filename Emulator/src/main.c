@@ -130,9 +130,6 @@ int main(int argc, char* argv[]){
 
 	// int jj = 0;
 
-	outb(CLOCK_WRITE, 0b01000001);
-	outd(CLOCK_DATA, 440);
-
 	while (running) {
 		update();
 
@@ -145,7 +142,6 @@ int main(int argc, char* argv[]){
 
 		IP_SET = true;
 
-		// printf("IP %X OP %d (%s)\n", registers[IP], operation, OPERATION_T_NAMES[operation]);
 
 		if (OPERATION_T_ARGC[operation] == 0) {
 			if (operation < OPERATION_MAX)
@@ -175,10 +171,14 @@ int main(int argc, char* argv[]){
 			for (int i = v2_size - 1; i >= 0; i--)
 				v2 |= (memory[((registers[IP] + 2 + v1_size) + i)] << (i * 8));
 
+			// if (operation != 0x10)
+			// 	printf("IP %X OP %d (%s) %d %d %d %d\n", registers[IP], operation, OPERATION_T_NAMES[operation], v1, v2, v1_size, v2_size);
+
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(indices, v1, v2);
 
-			// printf("V1: %X V2: %X SIZE %d\n", v1, v2, v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2);
+			// if (operation != 0x10)
+			// 	printf("V1: %X V2: %X SIZE %d", v1, v2, v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2);
 
 			if (IP_SET)
 				registers[IP] += v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2;

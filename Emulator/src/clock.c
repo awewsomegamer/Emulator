@@ -23,23 +23,24 @@ void update_clock() {
 	uint8_t data = inb(CLOCK_WRITE);
 
 	// Make sure there is new data to write
-	if (data == 0) 
+	if (data == 0)
 		return;
 
-	// Write new data
 	channels[(data >> 6) & 3] = data;
 
-	uint32_t frequency = ind(CLOCK_DATA);
+	// Write new data
 
+	uint32_t frequency = ind(CLOCK_DATA);
+	
 	// Make sure there is new frequency to write
 	if (frequency == 0)
 		return;
-	
+
 	channel_frequencies[(data >> 6) & 3] = frequency;
 
 	// Mark as read
 	outb(CLOCK_WRITE, 0);
-	outb(CLOCK_DATA, 0);
+	outd(CLOCK_DATA, 0);
 }
 
 void generate_clock_signal() {
@@ -56,8 +57,6 @@ void generate_clock_signal() {
 			break;
 		
 		case 1:
-			printf("playing frequency %d %d\n", channel_frequencies[i], channels[i] & 1);
-
 			if (channels[i] & 1)
 				play_frequency(channel_frequencies[i]);
 			

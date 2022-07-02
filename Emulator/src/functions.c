@@ -823,18 +823,26 @@ void IND_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 void OUTB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     switch (indices){
     case 0x00:
+        outb(v1, v2);
+        break;
+
     case 0x03:
         outb(memory[v1], v2);
         break;
 
     case 0x10:
+        outb(v1, registers[v1]);
+        break;
+
     case 0x13:
         outb(memory[v1], registers[v2]);
         break;
 
     case 0x23:
-	case 0x20:
         outb(memory[v1], memory[registers[v2]]);
+
+	case 0x20:
+        outb(v1, memory[registers[v2]]);
         break;
 
     case 0x22:
@@ -866,18 +874,28 @@ void OUTB_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 void OUTW_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     switch (indices){
     case 0x00:
+        outw(v1, v2);
+        break;
+
     case 0x03:
         outw(memory[v1], v2);
         break;
 
     case 0x10:
+        outw(v1, registers[v2]);
+        break;
+
     case 0x13:
         outw(memory[v1], registers[v2]);
         break;
 
     case 0x23:
-	case 0x20:
         outw(memory[v1], memory[registers[v2]]);
+        break;
+
+	case 0x20:
+        outw(v1, memory[registers[v2]]);
+
         break;
 
     case 0x22:
@@ -909,18 +927,27 @@ void OUTW_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 void OUTD_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     switch (indices){
     case 0x00:
+        outd(v1, v2);
+        break;
+
     case 0x03:
         outd(memory[v1], v2);
         break;
 
     case 0x10:
+        outd(v1, registers[v2]);
+        break;
+
     case 0x13:
         outd(memory[v1], registers[v2]);
         break;
 
     case 0x23:
-	case 0x20:
         outd(memory[v1], memory[registers[v2]]);
+        break;
+
+	case 0x20:
+        outd(v1, memory[registers[v2]]);
         break;
 
     case 0x22:
