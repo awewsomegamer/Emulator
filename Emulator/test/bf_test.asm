@@ -21,6 +21,9 @@ mov sp, bp
 ; Successfully set interrupt (27/5/2022)
 sivte 3, KEY_INTERRUPT
 
+outb 0x4, 0x41
+outd 0x6, 440
+
 LOOP:
 	jmp LOOP
 
@@ -46,7 +49,7 @@ KEY_INTERRUPT:
 	mov bx, 0
 	
 	mov bx, 0
-	int 0
+	int 1
 	
 	jmp END_INT
 
@@ -54,7 +57,7 @@ KEY_INTERRUPT:
 
 	; Update cursor
 	mov bx, 2
-	int 0
+	int 1
 	mov bx, ax
 	and bx, 0xFFFF
 	shr ax, 16
@@ -62,16 +65,16 @@ KEY_INTERRUPT:
 	shl ax, 16
 	or ax, bx
 	mov bx, 1
-	int 0
+	int 1
 
 	; Clear char
 	mov ax, ' '
 	mov bx, 0
-	int 0
+	int 1
 
 	; Update cursor
 	mov bx, 2
-	int 0
+	int 1
 	mov bx, ax
 	and bx, 0xFFFF
 	shr ax, 16
@@ -79,13 +82,13 @@ KEY_INTERRUPT:
 	shl ax, 16
 	or ax, bx
 	mov bx, 1
-	int 0
+	int 1
 	
 	END_INT:
 	ret
 
 CHARACTERS:
-	ds "   ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890     "
+	ds "    ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890     "
 
 
 ; LOOP:
@@ -101,7 +104,7 @@ CHARACTERS:
 ; 	jne END_PRINT_SEC
 
 ; 	mov ax, [cx]
-; 	int 0
+; 	int 1
 
 ; 	jmp COMMON_END_STUB
 	
