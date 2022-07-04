@@ -19,8 +19,10 @@
 
 extern const char* CLI_USAGE;
 
+extern uint32_t current_ms;
+extern uint32_t last_millisecond;
+
 extern uint8_t* memory;
-// extern uint8_t* stack;
 extern uint8_t* ports;
 
 extern FILE* disk;

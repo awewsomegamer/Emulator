@@ -13,24 +13,6 @@ SDL_Event event;
 int cursor_x = 0;
 int cursor_y = 0;
 
-// typedef enum {
-// 	BLACK = 0,
-// 	BLUE,
-// 	GREEN,
-// 	LIGHT_BLUE,
-// 	RED,
-// 	PURPLE,
-// 	BROWN,
-// 	GREY,
-// 	DARK_GREY,
-// 	LIGHT_DARK_BLUE,
-// 	CYAN,
-// 	LIGHT_RED,
-// 	PINK,
-// 	YELLOW,
-// 	WHITE
-// } COLORS;
-
 void clear_screen(){
 	for (int i = 0; i < WINDOW_HEIGHT; i++){
 		for (int j = 0; j < WINDOW_WIDTH; j++){

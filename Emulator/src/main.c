@@ -8,14 +8,6 @@
 #include <clock.h>
 #include <sys/time.h>
 
-bool IP_SET = true;
-uint32_t ticks = 0;
-
-#define CLOCKSPEED 25000000 // 25MHz
-#define FPS 60
-#define TPF 1
-#define TICKSPEED (FPS * TPF) // TPS
-
 #define GET_ARGUMENT_SIZE(value, idx) \ 
 	switch (OPERATION_T_ARGC[operation]){ \
 	case 0: \
@@ -52,6 +44,8 @@ int main(int argc, char* argv[]){
 	int start_address = 0;
 	uint64_t max_memory = UINT16_MAX;
 
+	bool disk_open = false;
+
 	// Interpret arguments
 	for (int i = 1; i < argc; i++){
 		if (startsWith(argv[i], "-i")){
@@ -69,8 +63,10 @@ int main(int argc, char* argv[]){
 				max_memory = atoi(argv[i+1]);
 		}
 
-		if (startsWith(argv[i], "-disk"))
+		if (startsWith(argv[i], "-disk")){
 			disk = fopen(argv[i+1], "rw");
+			disk_open = true;
+		}
 
 		if (startsWith(argv[i], "-h")){
 			printf("Visit https://github.com/awewsomegamer/Emulator/blob/main/README.md#cli-usage\n");
@@ -116,18 +112,15 @@ int main(int argc, char* argv[]){
 	init_operator_functions();
 
 	// While program is running, read bytes of memory at IP, and call proper operation
-	// SDL_Thread* window_thread = SDL_CreateThread(run_window, "WINDOW_THREAD", NULL);
-
-	// int64_t ticks = 0;
-	// time_t now_time = time(NULL);
-	// time_t last_time = time(NULL);
 
 	init_window();
 	init_clock();
 
-	// int jj = 0;
-
 	while (running) {
+		struct timeval te;
+		gettimeofday(&te, NULL);
+		uint32_t current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
+
 		update();
 
 		update_clock();
@@ -146,10 +139,6 @@ int main(int argc, char* argv[]){
 			uint8_t information =  *(memory + registers[IP]+1);
 			uint8_t indices = ((information & 0b00000011)) | (((information & 0b00001100) << 2));
 			
-			// for (int i = 7; i >= 0; i--)
-			// 	printf("%c", (((indices >> i) & 1) == 0 ? '0' : '1'));
-			// printf("%X\n", indices);
-
 			int v1_size = 0;
 			int v2_size = 0;
 
@@ -165,58 +154,28 @@ int main(int argc, char* argv[]){
 			for (int i = v2_size - 1; i >= 0; i--)
 				v2 |= (memory[((registers[IP] + 2 + v1_size) + i)] << (i * 8));
 
-			// if (operation != 0x10)
-			// 	printf("IP %X OP %d (%s) %d %d %d %d\n", registers[IP], operation, OPERATION_T_NAMES[operation], v1, v2, v1_size, v2_size);
-
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(indices, v1, v2);
-
-			// if (operation != 0x10)
-			// 	printf("V1: %X V2: %X SIZE %d", v1, v2, v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2);
 
 			if (IP_SET)
 				registers[IP] += v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2;
 		}
 
-		// uint32_t v1 = *(memory + registers[IP]+7) << 24 | *(memory + registers[IP]+6) << 16 | *(memory + registers[IP]+5) << 8 | *(memory + registers[IP]+4);
-		// uint32_t v2 = *(memory + registers[IP]+11) << 24 | *(memory + registers[IP]+10) << 16 | *(memory + registers[IP]+9) << 8 | *(memory + registers[IP]+8);
-
-			
-		// printf("IA: %X:\n", registers[IP]);
-
-
-		// printf("M 0x1000: %d R A: %d M R C: %d M R B: %c / %d O: %s\n", memory[0x1000], registers[A], memory[registers[C]], memory[registers[B]], memory[registers[B]], OPERATION_T_NAMES[operation]);
-
-		// print_regs();
-
-		// ticks++;
-
-		// Temporary emulator execution termination
-		// if (registers[IP] >= file_length + 12)
-		// 	running = false;
-
-		// now_time = time(NULL);
-
-		// if (now_time - last_time >= 1){
-		// 	printf("%ld TPS\n", ticks);
-		// 	ticks = 0;
-		// 	last_time = now_time;
-		// }
-
 		if (registers[IP] >= max_memory)
 			registers[IP] = 0;
 
 		ticks++;
+
+		last_millisecond = current_ms;
 	}
 
-	// SDL_WaitThread(window_thread, NULL);
+
 	SDL_Quit();
 
 	free(memory);
-	// free(stack);
 
-	fclose(disk);
+	if (disk_open)
+		fclose(disk);
 
 	return 0;
 }
-

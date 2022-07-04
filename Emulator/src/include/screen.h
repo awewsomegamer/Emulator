@@ -16,8 +16,8 @@
 
 extern SDL_AudioDeviceID audio_device;
 
-extern cursor_x;
-extern cursor_y;
+extern int cursor_x;
+extern int cursor_y;
 
 extern bool running;
 extern SDL_Window* window;

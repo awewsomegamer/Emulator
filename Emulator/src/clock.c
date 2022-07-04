@@ -57,33 +57,11 @@ void update_clock() {
 }
 
 void generate_clock_signal() {
-	// bool did_signal = false;
-
-	struct timeval te;
-	gettimeofday(&te, NULL);
-	uint32_t current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
-
 	for (int i = 0; i < 2; i++) {
 		switch (i) {
 		case 0:
-			// int period = 48000 / channel_frequencies[i];
-			// int8_t wave = ((ticks / (period / 2) % 2) ? 1 : 0);
-			
-			// int8_t wave = (int8_t)((sin(channel_frequencies[0] * (ticks++ / ((1600) / channel_frequencies[0])))) >= 0 ? 1 : -0);
-
-			// if (wave && !last_channel_zero){
-			// 	j++;
-			// 	call_interrupt(TIMER_INT);
-			// }
-			
-			if (current_ms - last_millisecond == 1){
+			if (current_ms - last_millisecond == 1)
 				call_interrupt(TIMER_INT);
-				j++;
-			}
-
-			// int8_t wave = (int8_t)sin(ticks) > 0 ? 1 : 0;
-
-			// last_channel_zero = wave;
 
 			break;
 		
@@ -95,18 +73,5 @@ void generate_clock_signal() {
 
 			break;
 		}
-
-		// did_signal = true;
 	}
-	
-	last_millisecond = current_ms;
-
-	if (time(0) == LAST_TIME + 1){
-		printf("%d CLOCK INTERRUPTS / SECOND\n", j);
-		j = 0;
-		LAST_TIME = time(0);
-	}
-
-	// if (did_signal)
-	// 	ticks = 0;
 }

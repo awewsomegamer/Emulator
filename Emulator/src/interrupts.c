@@ -47,7 +47,6 @@ void IVT_NOP(){ }
 // Temporary print(AX)
 // AX Char / uint16_t x | uint16_t y
 // BX Mode
-
 void IVT_0(){
     switch (registers[B]){
     case 1: // Set current cursor position

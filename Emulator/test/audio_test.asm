@@ -7,10 +7,10 @@ outd 0x6, 440
 ;outd 0x6, 1000 ; Set clock datas (Set frequency of currently selected channel)
 
 sivte 0, TIMER_HANDLER
+mov bx, 0
 
 TERMINATE:
 	mov ax, 'A'
-	mov bx, 0
 	int 1
 
 	jmp TERMINATE
@@ -38,7 +38,8 @@ TERMINATE:
 ; 		ret
 
 TIMER_HANDLER:
-	add [TICK], 1
+	mov ax, 'B'
+	int 1
 
 	ret
 
