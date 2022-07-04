@@ -8,12 +8,10 @@ outd 0x6, 440
 
 sivte 0, TIMER_HANDLER
 
-mov ax, 0
-
 TERMINATE:
+	mov ax, 'A'
 	mov bx, 0
 	int 1
-	; add ax, 1
 
 	jmp TERMINATE
 
@@ -40,11 +38,7 @@ TERMINATE:
 ; 		ret
 
 TIMER_HANDLER:
-	; mov ax, 'A'
-	; mov bx, 0
-	; int 1
-
-	; add [TICK], 1
+	add [TICK], 1
 
 	ret
 

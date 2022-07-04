@@ -7,6 +7,9 @@
 bool defined_interrupts[256];
 uint32_t defined_interrupt_ptrs[256];
 
+bool working_on_interrupt = false;
+
+
 // Set pointers of the IVT to the proper functions
 void init_ivt(){
     for (int i = 0; i < 256; i++){
@@ -46,8 +49,6 @@ void IVT_NOP(){ }
 // BX Mode
 
 void IVT_0(){
-    printf("CALLED MODE 0 INT 0\n");
-
     switch (registers[B]){
     case 1: // Set current cursor position
         set_cursor_position((registers[A] >> 16) & 0xFFFF, registers[A] & 0xFFFF);

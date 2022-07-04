@@ -11,6 +11,11 @@
 bool IP_SET = true;
 uint32_t ticks = 0;
 
+#define CLOCKSPEED 25000000 // 25MHz
+#define FPS 60
+#define TPF 1
+#define TICKSPEED (FPS * TPF) // TPS
+
 #define GET_ARGUMENT_SIZE(value, idx) \ 
 	switch (OPERATION_T_ARGC[operation]){ \
 	case 0: \
@@ -22,15 +27,6 @@ uint32_t ticks = 0;
 		break; \
 	}
 	
-
-// int run_window(void* arg){
-// 	init_window();
-
-// 	while (running)
-// 		update();
-
-// 	return 0;
-// }
 
 void print_regs(){
 	printf("-= REGISTER DUMP =-\n");
@@ -127,13 +123,12 @@ int main(int argc, char* argv[]){
 	// time_t last_time = time(NULL);
 
 	init_window();
+	init_clock();
 
 	// int jj = 0;
 
 	while (running) {
 		update();
-
-		ticks++;
 
 		update_clock();
 		generate_clock_signal();
@@ -141,7 +136,6 @@ int main(int argc, char* argv[]){
 		uint8_t operation =  *(memory + registers[IP]);
 
 		IP_SET = true;
-
 
 		if (OPERATION_T_ARGC[operation] == 0) {
 			if (operation < OPERATION_MAX)
@@ -211,6 +205,8 @@ int main(int argc, char* argv[]){
 
 		if (registers[IP] >= max_memory)
 			registers[IP] = 0;
+
+		ticks++;
 	}
 
 	// SDL_WaitThread(window_thread, NULL);

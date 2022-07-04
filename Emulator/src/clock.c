@@ -1,5 +1,6 @@
 #include <clock.h>
 #include <interrupts.h>
+#include <sys/time.h>
 
 // Channel information
 uint8_t channels[2];
@@ -7,9 +8,20 @@ uint8_t channels[2];
 // Measured in Hz
 // 0: IRQ
 // 1: Speaker
-uint32_t channel_frequencies[2] = {11981, 0};
+uint32_t channel_frequencies[2] = {1000, 0};
+int8_t last_channel_zero = 0;
+
+uint32_t last_millisecond = 0;
 
 int last_channel = 0;
+
+int j = 0;
+
+time_t LAST_TIME;
+
+void init_clock(){
+	LAST_TIME = time(0);
+}
 
 void update_clock() {
 	// 0b 00		00			000					0
@@ -47,20 +59,35 @@ void update_clock() {
 void generate_clock_signal() {
 	// bool did_signal = false;
 
-	for (int i = 0; i < 2; i++) {
-		// if (ticks % channel_frequencies[i] != 0)
-		// 	i++;
+	struct timeval te;
+	gettimeofday(&te, NULL);
+	uint32_t current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
 
+	for (int i = 0; i < 2; i++) {
 		switch (i) {
 		case 0:
-			// printf("CALLING TIMER %d\n", i);
-			call_interrupt(TIMER_INT);
+			// int period = 48000 / channel_frequencies[i];
+			// int8_t wave = ((ticks / (period / 2) % 2) ? 1 : 0);
+			
+			// int8_t wave = (int8_t)((sin(channel_frequencies[0] * (ticks++ / ((1600) / channel_frequencies[0])))) >= 0 ? 1 : -0);
+
+			// if (wave && !last_channel_zero){
+			// 	j++;
+			// 	call_interrupt(TIMER_INT);
+			// }
+			
+			if (current_ms - last_millisecond == 1){
+				call_interrupt(TIMER_INT);
+				j++;
+			}
+
+			// int8_t wave = (int8_t)sin(ticks) > 0 ? 1 : 0;
+
+			// last_channel_zero = wave;
 
 			break;
 		
 		case 1:
-			// printf("CALLING SOUND %d %d\n", i, channel_frequencies[i]);
-
 			if (channels[i] & 1 && channel_frequencies[i] > 0)
 				play_frequency(channel_frequencies[i]);
 			
@@ -70,6 +97,14 @@ void generate_clock_signal() {
 		}
 
 		// did_signal = true;
+	}
+	
+	last_millisecond = current_ms;
+
+	if (time(0) == LAST_TIME + 1){
+		printf("%d CLOCK INTERRUPTS / SECOND\n", j);
+		j = 0;
+		LAST_TIME = time(0);
 	}
 
 	// if (did_signal)

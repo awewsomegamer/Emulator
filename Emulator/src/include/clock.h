@@ -8,6 +8,7 @@
 #include <IO.h>
 #include <emulator.h>
 
+void init_clock();
 void update_clock();
 void generate_clock_signal();
 
