@@ -60,8 +60,13 @@ void generate_clock_signal() {
 	for (int i = 0; i < 2; i++) {
 		switch (i) {
 		case 0:
-			if (current_ms - last_millisecond == 1)
+			printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
+
+			if (current_ms - last_millisecond >= 2){
 				call_interrupt(TIMER_INT);
+
+				last_millisecond = current_ms;
+			}
 
 			break;
 		

@@ -1,6 +1,9 @@
 outb 0x4, 0x41
 outd 0x6, 440
 
+mov bp, 0x1000
+mov sp, bp
+
 ; mov ax, 10
 ; call WAIT
 
@@ -10,7 +13,8 @@ sivte 0, TIMER_HANDLER
 mov bx, 0
 
 TERMINATE:
-	mov ax, 'A'
+	mov ax, 2
+	mov bx, 3
 	int 1
 
 	jmp TERMINATE
@@ -38,10 +42,10 @@ TERMINATE:
 ; 		ret
 
 TIMER_HANDLER:
-	mov ax, 'B'
+	mov ax, 1
 	int 1
-
-	ret
+	
+	iret
 
 TICK:
 	db 0x0

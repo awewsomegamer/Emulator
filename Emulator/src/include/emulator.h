@@ -60,7 +60,7 @@ static const char* OPERATION_T_NAMES[] = {"nop", "mov", "sub", "add",
 										  "sivte", "rivte", "int", "call", 
 										  "jmp", "cmp", "je", "jne", "jg", 
 										  "jge", "jl", "jle", "jz", "jnz", 
-										  "jc", "jnc", "ret", "push", 
+										  "jc", "jnc", "ret", "iret", "push", 
 										  "pop", "inb", "inw", "ind", "outb", 
 										  "outw", "outd", "ds", "db", "inc"};
 
@@ -71,7 +71,7 @@ static const uint8_t OPERATION_T_ARGC[] = {
 	2, 2, 1, 1,
 	1, 2, 1, 1, 1,
 	1, 1, 1, 1, 1,
-	1, 1, 1, 1,
+	1, 1, 0, 0, 1,
 	1, 2, 2, 2, 2,
 	2, 2, 3, 3, 0
 };
@@ -106,6 +106,7 @@ typedef enum {
 	JC,
 	JNC,
 	RET,
+	IRET,
 	PUSH,
 	POP,
 	INB,

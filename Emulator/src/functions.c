@@ -83,6 +83,7 @@ void init_operator_functions(){
     // These takes no arguments
     operation_fuctions[NOP] = NOP_OPERATOR;
     operation_fuctions[RET] = RET_OPERATOR;
+    operation_fuctions[IRET] = IRET_OPERATOR;
 }
 
 void NOP_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2) { 
@@ -1162,4 +1163,9 @@ void RIVTE_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 
 void RET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
     JMP_OPERATOR(0, stack_pop(), 0); // Should always be address to return to, need to figure out better solution later
+}
+
+void IRET_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
+    working_on_interrupt = false;
+    RET_OPERATOR(0, 0, 0);
 }

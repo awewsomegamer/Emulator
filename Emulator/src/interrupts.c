@@ -2,13 +2,13 @@
 #include <emulator.h>
 #include <screen.h>
 #include <IO.h>
-#include <stdbool.h>
 
 bool defined_interrupts[256];
 uint32_t defined_interrupt_ptrs[256];
 
 bool working_on_interrupt = false;
-
+uint8_t interrupt_backburner[1000];
+int interrupt_backburner_sz = 0; // Last entry 
 
 // Set pointers of the IVT to the proper functions
 void init_ivt(){
@@ -33,16 +33,38 @@ void undefine_interrupt(int interrupt){
     defined_interrupt_ptrs[interrupt] = 0;
 }
 
-void call_interrupt(int interrupt){
+void do_interrupt(int interrupt){
+    working_on_interrupt = true;
+
     if (defined_interrupts[interrupt]){
         stack_push(registers[IP]);
         registers[IP] = defined_interrupt_ptrs[interrupt];
+        IP_SET = false;
     }else{
         (*ivt[interrupt])();
     }
 }
 
-void IVT_NOP(){ }
+void call_interrupt(int interrupt){
+    if (working_on_interrupt){
+        // Add inerrupt to backburner to do later
+        interrupt_backburner[interrupt_backburner_sz++] = interrupt;
+    } else if (interrupt_backburner_sz != 0) {
+        // If no interrupt is being worked on but there are interrupts on the backburner
+        do_interrupt(interrupt_backburner[0]);
+        
+        // Shift backburner back to next interrupt
+        for (int i = 1; i < interrupt_backburner_sz; i++)
+            interrupt_backburner[i - 1] = interrupt_backburner[i];
+    } else {
+        // There is no interrupt on the backburner, do regular interrupt
+        do_interrupt(interrupt);
+    }
+}
+
+void IVT_NOP(){
+    working_on_interrupt = false;
+}
 
 // Temporary print(AX)
 // AX Char / uint16_t x | uint16_t y
@@ -89,8 +111,9 @@ void IVT_0(){
             sputc(c);
             break;
         }
-    
-    }    
+    }
+
+    working_on_interrupt = false;
 }
 
 // Disk functions
@@ -107,4 +130,6 @@ void IVT_1(){
         fread(memory + registers[B], registers[D] * 512, 1, disk);
     else
         fwrite(memory + registers[B], registers[D] * 512, 1, disk);
+
+    working_on_interrupt = false;
 }

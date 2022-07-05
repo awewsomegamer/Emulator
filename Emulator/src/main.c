@@ -8,6 +8,8 @@
 #include <clock.h>
 #include <sys/time.h>
 
+// #define FPS 120
+
 #define GET_ARGUMENT_SIZE(value, idx) \ 
 	switch (OPERATION_T_ARGC[operation]){ \
 	case 0: \
@@ -117,9 +119,13 @@ int main(int argc, char* argv[]){
 	init_clock();
 
 	while (running) {
+		// printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
+
+		uint32_t start_tick = SDL_GetTicks();
+
 		struct timeval te;
 		gettimeofday(&te, NULL);
-		uint32_t current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
+		current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
 
 		update();
 
@@ -165,8 +171,9 @@ int main(int argc, char* argv[]){
 			registers[IP] = 0;
 
 		ticks++;
-
-		last_millisecond = current_ms;
+		
+		// if ((1000 / FPS) > SDL_GetTicks() - start_tick)
+		// 	SDL_Delay((1000 / FPS) - (SDL_GetTicks() - start_tick));
 	}
 
 

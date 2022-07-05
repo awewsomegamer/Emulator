@@ -43,5 +43,6 @@ void OUTB_OPERATOR(uint8_t, uint32_t, uint32_t);
 void OUTW_OPERATOR(uint8_t, uint32_t, uint32_t);
 void OUTD_OPERATOR(uint8_t, uint32_t, uint32_t);
 void RET_OPERATOR(uint8_t, uint32_t, uint32_t);
+void IRET_OPERATOR(uint8_t, uint32_t, uint32_t);
 
 #endif

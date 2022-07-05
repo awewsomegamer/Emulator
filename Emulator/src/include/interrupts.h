@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
+
+extern bool working_on_interrupt;
 
 void init_ivt();
 
