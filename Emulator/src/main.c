@@ -6,9 +6,21 @@
 #include <screen.h>
 #include <IO.h>
 #include <clock.h>
+#include <pthread.h>
 #include <sys/time.h>
 
-// #define FPS 120
+#define FPS 120
+
+void* clock_loop(void* arg){
+	while (running){
+		struct timeval te;
+		gettimeofday(&te, NULL);
+		current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
+
+		update_clock();
+		generate_clock_signal();
+	}
+}
 
 #define GET_ARGUMENT_SIZE(value, idx) \ 
 	switch (OPERATION_T_ARGC[operation]){ \
@@ -118,19 +130,15 @@ int main(int argc, char* argv[]){
 	init_window();
 	init_clock();
 
+	pthread_t clock_thread;
+	pthread_create(&clock_thread, NULL, clock_loop, NULL);
+
 	while (running) {
 		// printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
 
 		uint32_t start_tick = SDL_GetTicks();
 
-		struct timeval te;
-		gettimeofday(&te, NULL);
-		current_ms = te.tv_sec * 1000 + te.tv_usec / 1000;
-
 		update();
-
-		update_clock();
-		generate_clock_signal();
 
 		uint8_t operation =  *(memory + registers[IP]);
 
@@ -176,7 +184,7 @@ int main(int argc, char* argv[]){
 		// 	SDL_Delay((1000 / FPS) - (SDL_GetTicks() - start_tick));
 	}
 
-
+	pthread_join(clock_thread, NULL);
 	SDL_Quit();
 
 	free(memory);

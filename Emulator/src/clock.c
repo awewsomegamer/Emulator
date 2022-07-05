@@ -62,7 +62,7 @@ void generate_clock_signal() {
 		case 0:
 			printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
 
-			if (current_ms - last_millisecond >= 2){
+			if (current_ms - last_millisecond >= 3){
 				call_interrupt(TIMER_INT);
 
 				last_millisecond = current_ms;
