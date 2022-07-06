@@ -1,5 +1,5 @@
-outb 0x4, 0x41
-outd 0x6, 440
+; outb 0x4, 0x41
+; outd 0x6, 440
 
 mov bp, 0x1000
 mov sp, bp
@@ -10,10 +10,12 @@ mov sp, bp
 ;outd 0x6, 1000 ; Set clock datas (Set frequency of currently selected channel)
 
 sivte 0, TIMER_HANDLER
-mov bx, 0
+nop
+nop
+mov ax, 0
+; mov bx, 0
 
 TERMINATE:
-	mov ax, 2
 	mov bx, 3
 	int 1
 
@@ -42,8 +44,15 @@ TERMINATE:
 ; 		ret
 
 TIMER_HANDLER:
-	mov ax, 1
+	push ax
+	push bx
+
+	mov ax, 'A'
+	mov bx, 0
 	int 1
+
+	pop bx
+	pop ax
 	
 	iret
 

@@ -50,7 +50,6 @@ void update_clock() {
 	if (frequency != 0)
 		channel_frequencies[last_channel] = frequency;
 	
-	
 	// Mark as read
 	outb(CLOCK_WRITE, 0);
 	outd(CLOCK_DATA, 0);
@@ -60,9 +59,9 @@ void generate_clock_signal() {
 	for (int i = 0; i < 2; i++) {
 		switch (i) {
 		case 0:
-			printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
+			// printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
 
-			if (current_ms - last_millisecond >= 3){
+			if (current_ms - last_millisecond >= 15){
 				call_interrupt(TIMER_INT);
 
 				last_millisecond = current_ms;

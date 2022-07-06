@@ -93,6 +93,13 @@ void sputc(char c){
 		cursor_y += GLYPH_HEIGHT;
 	}
 
+	if (cursor_y >= WINDOW_HEIGHT){
+		printf("A\n");
+		registers[A]++;
+
+		cursor_x = 0;
+		cursor_y = 0;
+	}
 }
 
 void set_cursor_position(int x, int y){
