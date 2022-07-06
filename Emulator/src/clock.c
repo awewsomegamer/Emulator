@@ -62,7 +62,6 @@ void generate_clock_signal() {
 			// printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
 
 			if (current_ms - last_millisecond >= 50){
-				printf("CALLING TIMER INTERRUPT\n");
 				call_interrupt(TIMER_INT);
 
 				last_millisecond = current_ms;
@@ -71,10 +70,10 @@ void generate_clock_signal() {
 			break;
 		
 		case 1:
-			if (channels[i] & 1 && channel_frequencies[i] > 0)
-				play_frequency(channel_frequencies[i]);
+			if (channels[1] & 1 && channel_frequencies[1] > 0)
+				play_frequency(channel_frequencies[1]);
 			
-			audio_enable(channels[i] & 1);
+			audio_enable(channels[1] & 1);
 
 			break;
 		}
