@@ -134,7 +134,8 @@ int main(int argc, char* argv[]){
 	pthread_create(&clock_thread, NULL, clock_loop, NULL);
 
 	while (running) {
-		printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
+		// if (registers[IP] <= file_length + 10)
+		// 	printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
 
 		uint32_t start_tick = SDL_GetTicks();
 

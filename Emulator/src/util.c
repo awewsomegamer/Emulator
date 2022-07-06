@@ -57,12 +57,15 @@ void removeCharacter(char* line, char c){
 }
 
 void stack_push(uint32_t value){
+	printf("PUSHING: %X\n", value);
 	memory[registers[SP]++] = value;
 }
 
 uint32_t stack_pop(){
 	uint32_t ret = memory[--registers[SP]];
+	printf("POPPING: %X AT: %X (CURRENT: %X) ", ret, registers[SP], memory[registers[SP]]);
 	memory[registers[SP]] = 0;
+	printf("POST CURRENT: %X\n", memory[registers[SP]]);
 
 	return ret;
 }

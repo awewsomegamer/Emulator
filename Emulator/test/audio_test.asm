@@ -44,15 +44,15 @@ TERMINATE:
 ; 		ret
 
 TIMER_HANDLER:
-	push ax
-	push bx
+	; push ax
+	; push bx
 
-	mov ax, 'A'
-	mov bx, 0
-	int 1
+	; mov ax, 'B'
+	; mov bx, 0
+	; int 1
 
-	pop bx
-	pop ax
+	; pop bx
+	; pop ax
 	
 	iret
 
