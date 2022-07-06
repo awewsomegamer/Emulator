@@ -61,7 +61,8 @@ void generate_clock_signal() {
 		case 0:
 			// printf("%d %d %d\n",current_ms - last_millisecond, current_ms, last_millisecond);
 
-			if (current_ms - last_millisecond >= 15){
+			if (current_ms - last_millisecond >= 50){
+				printf("CALLING TIMER INTERRUPT\n");
 				call_interrupt(TIMER_INT);
 
 				last_millisecond = current_ms;

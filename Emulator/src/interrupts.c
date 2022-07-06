@@ -46,20 +46,24 @@ void do_interrupt(int interrupt){
 }
 
 void call_interrupt(int interrupt){
-    if (working_on_interrupt){
-        // Add inerrupt to backburner to do later
-        interrupt_backburner[interrupt_backburner_sz++] = interrupt;
-    } else if (interrupt_backburner_sz != 0) {
-        // If no interrupt is being worked on but there are interrupts on the backburner
-        do_interrupt(interrupt_backburner[0]);
+    // Fix backburner
+    // if (working_on_interrupt){
+    //     // Add inerrupt to backburner to do later
+    //     interrupt_backburner[interrupt_backburner_sz++] = interrupt;
+    // } else if (interrupt_backburner_sz != 0) {
+    //     // If no interrupt is being worked on but there are interrupts on the backburner
+    //     printf("USING BACKBURNER\n");
+    //     do_interrupt(interrupt_backburner[0]);
         
-        // Shift backburner back to next interrupt
-        for (int i = 1; i < interrupt_backburner_sz; i++)
-            interrupt_backburner[i - 1] = interrupt_backburner[i];
-    } else {
-        // There is no interrupt on the backburner, do regular interrupt
-        do_interrupt(interrupt);
-    }
+    //     // Shift backburner back to next interrupt
+    //     for (int i = 1; i < interrupt_backburner_sz; i++)
+    //         interrupt_backburner[i - 1] = interrupt_backburner[i];
+    // } else if (!working_on_interrupt){
+    //     // There is no interrupt on the backburner, do regular interrupt
+    //     
+    // }
+
+    do_interrupt(interrupt);
 }
 
 void IVT_NOP(){

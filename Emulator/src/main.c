@@ -142,6 +142,7 @@ int main(int argc, char* argv[]){
 		update();
 
 		uint8_t operation =  *(memory + registers[IP]);
+		// printf("OP: %s AT: %X\n", OPERATION_T_NAMES[operation], registers[IP]);
 
 		IP_SET = true;
 
@@ -149,7 +150,8 @@ int main(int argc, char* argv[]){
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(0, 0, 0);
 
-			registers[IP]++;
+			if (IP_SET)
+				registers[IP]++;
 		} else {
 			uint8_t information =  *(memory + registers[IP]+1);
 			uint8_t indices = ((information & 0b00000011)) | (((information & 0b00001100) << 2));
@@ -181,8 +183,8 @@ int main(int argc, char* argv[]){
 
 		ticks++;
 		
-		// if ((1000 / FPS) > SDL_GetTicks() - start_tick)
-		// 	SDL_Delay((1000 / FPS) - (SDL_GetTicks() - start_tick));
+		if ((1000 / FPS) > SDL_GetTicks() - start_tick)
+			SDL_Delay((1000 / FPS) - (SDL_GetTicks() - start_tick));
 	}
 
 	pthread_join(clock_thread, NULL);
