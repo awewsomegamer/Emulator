@@ -17,7 +17,8 @@ uint32_t read_address_d(int address){
 
 void write_address_b(int address, uint8_t value){
 	if (IS_ROM(address)){
-		e_error("Tried to write to ROM address");
+		e_error("Tried to write to ROM address", __FILE__, __LINE__);
+		
 		return;
 	}
 

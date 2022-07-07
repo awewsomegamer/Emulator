@@ -43,7 +43,7 @@ void call_hardware_interrupt(int interrupt, int data, int data_size, int data_lo
 		break;
 
 	default:
-		printf("ERROR: Unsupported size call_hardware_interrupt() IO.c\n");
+		e_error("Invalid size %d", __FILE__, __LINE__);
 		break;
 	}
 

@@ -12,7 +12,7 @@
 #define FPS 240
 
 #define GET_ARGUMENT_SIZE(value, idx) \ 
-	switch (OPERATION_T_ARGC[operation]){ \
+	switch (INSTRUCTION_SET[operation].argc){ \
 	case 0: \
 		value = 0; \
 		break; \
@@ -126,7 +126,6 @@ int main(int argc, char* argv[]){
 	init_operator_functions();
 
 	// While program is running, read bytes of memory at IP, and call proper operation
-
 	init_window();
 	init_clock();
 
@@ -146,7 +145,7 @@ int main(int argc, char* argv[]){
 
 		IP_SET = true;
 
-		if (OPERATION_T_ARGC[operation] == 0) {
+		if (INSTRUCTION_SET[operation].argc == 0) {
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(0, 0, 0);
 
@@ -171,14 +170,16 @@ int main(int argc, char* argv[]){
 			for (int i = v2_size - 1; i >= 0; i--)
 				v2 |= (memory[((registers[IP] + 2 + v1_size) + i)] << (i * 8));
 
-			if (registers[IP] <= 0x08)
-				printf("%s %d %d\n", OPERATION_T_NAMES[operation], v1, v2);
+			// if (registers[IP] <= 0x08)
+			// 	printf("%s %d %d\n", OPERATION_T_NAMES[operation], v1, v2);
 
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(indices, v1, v2);
+			else
+				e_fatal("Invalid operation code %d.", __FILE__, __LINE__, operation);
 
 			if (IP_SET)
-				registers[IP] += v1_size + (OPERATION_T_ARGC[operation] == 2 ? v2_size : 0) + 2;
+				registers[IP] += v1_size + (INSTRUCTION_SET[operation].argc == 2 ? v2_size : 0) + 2;
 		}
 
 		if (registers[IP] >= max_memory)
