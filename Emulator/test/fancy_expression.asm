@@ -34,9 +34,23 @@ int 1
 mov bx, FOURTH_EQUATION
 call PRINT_STRING
 
-mov ax, 10/5/2
-mov bx, 3
+; mov ax, 10/5/2
+; mov bx, 3
+; int 1
+
+mov ax, 'A'
+mov bx, 0
 int 1
+int 1
+int 1
+int 1
+int 1
+int 1
+int 1
+int 1
+int 1
+int 1
+
 
 TERMINATE:
 	jmp TERMINATE
