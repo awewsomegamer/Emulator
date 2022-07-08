@@ -38,10 +38,6 @@ mov ax, 10/5/2
 mov bx, 3
 int 1
 
-; mov ax, 0xA
-; mov bx, 0
-; int 1
-
 TERMINATE:
 	jmp TERMINATE
 
