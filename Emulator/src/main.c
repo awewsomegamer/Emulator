@@ -145,10 +145,10 @@ int main(int argc, char* argv[]){
 
 		IP_SET = true;
 		
-		if (operation != JMP){
-			printf("[PRE]: ");
-			print_regs();
-		}
+		// if (operation != JMP){
+		// 	printf("[PRE]: ");
+		// 	print_regs();
+		// }
 
 		if (INSTRUCTION_SET[operation].argc == 0) {
 			current_instruction_size = 1;
@@ -156,10 +156,10 @@ int main(int argc, char* argv[]){
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(0, 0, 0);
 
-			if (operation != JMP){
-				printf("[POST]: ");
-				print_regs();
-			}
+			// if (operation != JMP){
+			// 	printf("[POST]: ");
+			// 	print_regs();
+			// }
 
 			if (IP_SET)
 				registers[IP]++;
@@ -192,10 +192,10 @@ int main(int argc, char* argv[]){
 			else
 				e_fatal("Invalid operation code %d.", __FILE__, __LINE__, operation);
 
-			if (operation != JMP){
-				printf("[POST]: ");
-				print_regs();
-			}
+			// if (operation != JMP){
+			// 	printf("[POST]: ");
+			// 	print_regs();
+			// }
 
 			if (IP_SET)
 				registers[IP] += current_instruction_size;
