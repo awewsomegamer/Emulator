@@ -1,3 +1,6 @@
+mov bp, 0x1000
+mov sp, bp
+
 mov bx, FIRST_EQUATION
 call PRINT_STRING
 
@@ -38,13 +41,9 @@ mov ax, 10/5/2
 mov bx, 3
 int 1
 
-; mov ax, 'A'
-; mov bx, 0
-; int 1
-
-; mov ax, 0xA
-; mov bx, 0
-; int 1
+mov ax, 0xA
+mov bx, 0
+int 1
 
 TERMINATE:
 	jmp TERMINATE

@@ -24,7 +24,7 @@
 	
 
 void print_regs(){
-	printf("-= REGISTER DUMP =-\n");
+	printf("-= REGISTER DUMP (OP: %s) =-\n", INSTRUCTION_SET[memory[registers[IP]]].key);
 	printf("+-AX : %X\n", registers[0]);
 	printf("+-BX : %X\n", registers[1]);
 	printf("+-CX : %X\n", registers[2]);
@@ -144,12 +144,22 @@ int main(int argc, char* argv[]){
 		// printf("OP: %s AT: %X\n", OPERATION_T_NAMES[operation], registers[IP]);
 
 		IP_SET = true;
+		
+		if (operation != JMP){
+			printf("[PRE]: ");
+			print_regs();
+		}
 
 		if (INSTRUCTION_SET[operation].argc == 0) {
 			current_instruction_size = 1;
 
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(0, 0, 0);
+
+			if (operation != JMP){
+				printf("[POST]: ");
+				print_regs();
+			}
 
 			if (IP_SET)
 				registers[IP]++;
@@ -181,6 +191,11 @@ int main(int argc, char* argv[]){
 				(*operation_fuctions[operation])(indices, v1, v2);
 			else
 				e_fatal("Invalid operation code %d.", __FILE__, __LINE__, operation);
+
+			if (operation != JMP){
+				printf("[POST]: ");
+				print_regs();
+			}
 
 			if (IP_SET)
 				registers[IP] += current_instruction_size;

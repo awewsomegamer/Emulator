@@ -103,7 +103,7 @@ void IVT_0(){
 
     case 0:
         char c = registers[A];
-
+        
         switch (c){
         case '\n': 
             cursor_x = 0;
