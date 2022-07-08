@@ -1,7 +1,7 @@
 mov bx, FIRST_EQUATION
 call PRINT_STRING
 
-mov ax, 5+10
+mov ax, 5+10+5
 mov bx, 3
 int 1
 
@@ -12,7 +12,7 @@ int 1
 mov bx, SECOND_EQUATION
 call PRINT_STRING
 
-mov ax, 5*10
+mov ax, 5*10+1*2*4
 mov bx, 3
 int 1
 
@@ -23,7 +23,7 @@ int 1
 mov bx, THIRD_EQUATION
 call PRINT_STRING
 
-mov ax, 10-5
+mov ax, 10-5+1-2/2
 mov bx, 3
 int 1
 
@@ -34,14 +34,13 @@ int 1
 mov bx, FOURTH_EQUATION
 call PRINT_STRING
 
-mov ax, 10/5
+mov ax, 10/5/2
 mov bx, 3
 int 1
 
-mov ax, 0xA
-mov bx, 0
-int 1
-
+; mov ax, 0xA
+; mov bx, 0
+; int 1
 
 TERMINATE:
 	jmp TERMINATE
@@ -63,24 +62,22 @@ PRINT_STRING:
 PRINT_STRING_END:
 	ret
 
-
-
 jmp DATA_END
 
 FIRST_EQUATION:
-	ds "5 + 10 = "
+	ds "5 + 10 + 5 = "
 	db 0x0
 
 SECOND_EQUATION:
-	ds "5 * 10 = "
+	ds "5 * 10 + 1 * 2 * 4 = "
 	db 0x0
 
 THIRD_EQUATION:
-	ds "10 - 5 = "
+	ds "10 - 5 + 1 - 2 / 2 = "
 	db 0x0
 
 FOURTH_EQUATION:
-	ds "10 / 5 = "
+	ds "10 / 5 / 2 = "
 	db 0x0
 
 DATA_END:
