@@ -1089,7 +1089,7 @@ void INT_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
 }
 
 void CALL_OPERATOR(uint8_t indices, uint32_t v1, uint32_t v2){
-    stack_push(registers[IP]);
+    stack_push(registers[IP] + current_instruction_size);
     IP_SET = false;
     registers[IP] = v1;
 }

@@ -146,6 +146,8 @@ int main(int argc, char* argv[]){
 		IP_SET = true;
 
 		if (INSTRUCTION_SET[operation].argc == 0) {
+			current_instruction_size = 1;
+
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(0, 0, 0);
 
@@ -173,13 +175,15 @@ int main(int argc, char* argv[]){
 			// if (registers[IP] <= 0x08)
 			// 	printf("%s %d %d\n", OPERATION_T_NAMES[operation], v1, v2);
 
+			current_instruction_size = v1_size + (INSTRUCTION_SET[operation].argc == 2 ? v2_size : 0) + 2;
+
 			if (operation < OPERATION_MAX)
 				(*operation_fuctions[operation])(indices, v1, v2);
 			else
 				e_fatal("Invalid operation code %d.", __FILE__, __LINE__, operation);
 
 			if (IP_SET)
-				registers[IP] += v1_size + (INSTRUCTION_SET[operation].argc == 2 ? v2_size : 0) + 2;
+				registers[IP] += current_instruction_size;
 		}
 
 		if (registers[IP] >= max_memory)

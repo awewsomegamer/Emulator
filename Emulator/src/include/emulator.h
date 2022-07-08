@@ -26,6 +26,8 @@ extern uint32_t last_millisecond;
 extern uint8_t* memory;
 extern uint8_t* ports;
 
+extern int current_instruction_size;
+
 extern FILE* disk;
 
 extern bool IP_SET;
