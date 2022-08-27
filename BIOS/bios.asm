@@ -58,7 +58,7 @@ BOOTLOADER_NOT_FOUND:
 jmp DATA_END
 
 BOOT_SIGNATURE:
-	db 0xABCD
+	db 0xAB, 0xCD
 
 MESSAGE:
 	ds "Loading boot sector"

@@ -134,7 +134,7 @@ int main(int argc, char* argv[]){
 
 	while (running) {
 		// if (registers[IP] <= file_length + 10)
-			// printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
+		// 	printf("%X %X %X %X\n", registers[IP], max_memory, memory[registers[IP]], registers[SP]);
 		
 		uint32_t start_tick = SDL_GetTicks();
 
@@ -182,8 +182,8 @@ int main(int argc, char* argv[]){
 			for (int i = v2_size - 1; i >= 0; i--)
 				v2 |= (memory[((registers[IP] + 2 + v1_size) + i)] << (i * 8));
 
-			// if (registers[IP] <= 0x08)
-			// 	printf("%s %d %d\n", OPERATION_T_NAMES[operation], v1, v2);
+			if (registers[IP] <= 0x08)
+				printf("%s %d %d\n", INSTRUCTION_SET[operation].key, v1, v2);
 
 			current_instruction_size = v1_size + (INSTRUCTION_SET[operation].argc == 2 ? v2_size : 0) + 2;
 
